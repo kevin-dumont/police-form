@@ -32,19 +32,29 @@ jobs:
               - '*.tf'
               - '*.tfvars'
 
+      - name: Cache build files
+        id: cache-build-files
+        uses: actions/cache@v2
+        with:
+          path: packages/**/src
+          key: ${{ runner.os }}-build-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+        if: steps.changes.outputs.src == 'true'
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: "18"
-        if: steps.changes.outputs.src == 'true'
+        if: steps.changes.outputs.src == 'true' && steps.cache-build-files.outputs.cache-hit != 'true'
 
       - name: Install Dependencies
         run: yarn install
-        if: steps.changes.outputs.src == 'true'
+        if: steps.changes.outputs.src == 'true' && steps.cache-build-files.outputs.cache-hit != 'true'
 
       - name: Build
         run: yarn build
-        if: steps.changes.outputs.src == 'true'
+        if: steps.changes.outputs.src == 'true' && steps.cache-build-files.outputs.cache-hit != 'true'
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
