@@ -1,8 +1,8 @@
-import moment from "moment";
 import { ParsedQs } from "qs";
+import dayjs from "dayjs";
 
 export const parseDate = (date?: string | ParsedQs | string[] | ParsedQs[]) => {
   if (typeof date !== "string") return undefined;
 
-  return date ? moment(date) : undefined;
+  return date ? dayjs(date) : undefined;
 };

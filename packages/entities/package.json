@@ -1,0 +1,9 @@
+{
+  "name": "@sygmaa/entities",
+  "version": "1.0.0",
+  "description": "Entities",
+  "license": "ISC",
+  "types": "src/index.ts",
+  "main": "src/index.ts",
+  "scripts": {}
+}

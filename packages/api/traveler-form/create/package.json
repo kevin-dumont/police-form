@@ -5,5 +5,8 @@
   "license": "ISC",
   "scripts": {
     "build": "node -e \"require('@sygmaa/core-build')\""
+  },
+  "dependencies": {
+    "@sygmaa/validators": "^1.0.0"
   }
 }
