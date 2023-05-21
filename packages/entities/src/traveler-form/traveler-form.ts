@@ -2,8 +2,8 @@ import { DynamoDbSchema, DynamoDbTable } from "@aws/dynamodb-data-mapper";
 
 const DateIsoString = {
   type: "Custom",
-  marshall: (input) => ({ S: new Date(input).toISOString() }),
-  unmarshall: (persistedValue) => new Date(persistedValue.S),
+  marshall: (input: string) => ({ S: new Date(input).toISOString() }),
+  unmarshall: (persistedValue: { S: string }) => new Date(persistedValue.S),
 };
 
 const TravelerSchema = {

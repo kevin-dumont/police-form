@@ -8,6 +8,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const form: TravelerForm = JSON.parse(event.body);
 
   const result = validateTravelerForm(form);
+
   if (!result.success) {
     return {
       statusCode: 400,
@@ -17,6 +18,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
 
   try {
     await saveTravelerForm(form);
+
     return {
       statusCode: 200,
       body: JSON.stringify({ message: "Form saved successfully" }),
