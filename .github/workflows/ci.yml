@@ -68,6 +68,6 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
-          AWS_S3_BUCKET: "traveler_form_web"
+          AWS_S3_BUCKET: "traveler-form-web"
           SOURCE_DIR: "packages/web/build"
         if: steps.changes.outputs.web == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
