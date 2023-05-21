@@ -18,26 +18,33 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Check for code changes
-        id: check_files
-        run: |
-          echo "::set-output name=src_changed::$(git diff --quiet HEAD^ HEAD packages/**/src/** || echo true)"
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            src:
+              - 'packages/**/src/**'
+            web:
+              - 'packages/web/src/**'
+            infra:
+              - '*.tf'
+              - '*.tfvars'
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: "18"
-        if: steps.check_files.outputs.src_changed
+        if: steps.changes.outputs.src == 'true'
 
       - name: Install Dependencies
         run: yarn install
-        if: steps.check_files.outputs.src_changed
+        if: steps.changes.outputs.src == 'true'
 
       - name: Build
         run: yarn build
-        if: steps.check_files.outputs.src_changed
+        if: steps.changes.outputs.src == 'true'
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -46,13 +53,15 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        if: steps.changes.outputs.infra == 'true'
 
       - name: Terraform Validate
         run: terraform validate
+        if: steps.changes.outputs.infra == 'true'
 
       - name: Terraform Plan
         run: terraform plan
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: steps.changes.outputs.infra == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Sync to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
@@ -61,4 +70,4 @@ jobs:
         env:
           AWS_S3_BUCKET: "traveler_form_web"
           SOURCE_DIR: "packages/web/build"
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: steps.changes.outputs.web == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
