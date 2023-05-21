@@ -6,6 +6,3 @@ export const travelersHas18years = (traveler: FormTraveler) => {
 
   return traveler.dateOfBirth.isBefore(moment().subtract(18, "years"));
 };
-
-export const placeOfBirthPlaceholder = `Lieu de naissance (ville, code postal, pays)
-Place of birth (city, postal code, country)`;

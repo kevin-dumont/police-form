@@ -1,0 +1,8 @@
+{
+  "name": "@sygmaa/api-traveler-form-create",
+  "version": "1.0.0",
+  "description": "Lambda to create a traveler form",
+  "scripts": {
+    "build": "node -e \"require('@sygmaa/core-build')\""
+  }
+}
