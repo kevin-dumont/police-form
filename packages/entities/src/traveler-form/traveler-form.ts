@@ -1,4 +1,5 @@
 import { DynamoDbSchema, DynamoDbTable } from "@aws/dynamodb-data-mapper";
+import { TravelerForm } from "./types";
 
 const DateIsoString = {
   type: "Custom",
@@ -19,7 +20,7 @@ const TravelerSchema = {
 };
 
 export class TravelerFormObject {
-  constructor(obj) {
+  constructor(obj: TravelerForm) {
     Object.assign(this, obj);
   }
 
