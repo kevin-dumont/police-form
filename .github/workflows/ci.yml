@@ -20,16 +20,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Check for code changes
+        id: check_files
+        run: |
+          echo "::set-output name=src_changed::$(git diff --quiet HEAD^ HEAD packages/**/src/** || echo true)"
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: "18"
+        if: steps.check_files.outputs.src_changed
 
       - name: Install Dependencies
         run: yarn install
+        if: steps.check_files.outputs.src_changed
 
       - name: Build
         run: yarn build
+        if: steps.check_files.outputs.src_changed
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -51,6 +59,6 @@ jobs:
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
-          AWS_S3_BUCKET: "traveler-form-web"
+          AWS_S3_BUCKET: "traveler_form_web"
           SOURCE_DIR: "packages/web/build"
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
