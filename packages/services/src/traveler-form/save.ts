@@ -1,6 +1,14 @@
-import { TravelerForm } from "@sygmaa/entities";
+import { TravelerForm, TravelerFormObject } from "@sygmaa/entities";
 import { getDataMapper } from "@sygmaa/core-dynamodb";
 
 export async function saveTravelerForm(form: TravelerForm) {
-  return await getDataMapper().put({ item: form });
+  const date = new Date();
+
+  return await getDataMapper().put(
+    new TravelerFormObject({
+      ...form,
+      createdTime: date,
+      updatedTime: date,
+    })
+  );
 }
