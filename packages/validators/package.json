@@ -1,0 +1,12 @@
+{
+  "name": "@sygmaa/validators",
+  "version": "1.0.0",
+  "description": "Validators",
+  "license": "ISC",
+  "types": "src/index.ts",
+  "main": "src/index.ts",
+  "scripts": {},
+  "dependencies": {
+    "@sygmaa/entities": "^1.0.0"
+  }
+}

@@ -9,3 +9,10 @@ export type Traveler = {
   nationality: string;
   signature?: string;
 };
+
+export type TravelerForm = {
+  id?: string;
+  travelers: Traveler[];
+  checkInDate: string;
+  checkOutDate: string;
+};

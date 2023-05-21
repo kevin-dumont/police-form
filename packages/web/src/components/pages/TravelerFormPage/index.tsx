@@ -1,10 +1,17 @@
-import { TravelerForm } from "../../UI/TravelerForm";
+import { TravelerForm, TravelerFormProps } from "../../UI/TravelerForm";
 import { Typography } from "antd";
 import { useQueryInfos } from "./hooks/useQueryInfos";
 import style from "./style.module.scss";
+import { buildTravelerFormOutput } from "../../../services/builders/traveler-form";
 
 export function TravelerFormPage() {
   const { checkInDate, checkOutDate, nbTravelers } = useQueryInfos();
+
+  const handleFinish: TravelerFormProps["onFinish"] = (travelerForm) => {
+    const data = buildTravelerFormOutput(travelerForm);
+
+    console.log("data", data);
+  };
 
   return (
     <div className={style.container}>
@@ -23,7 +30,7 @@ export function TravelerFormPage() {
         checkInDate={checkInDate}
         checkOutDate={checkOutDate}
         nbTravelers={nbTravelers}
-        onFinish={(values) => console.log(values)}
+        onFinish={handleFinish}
       />
     </div>
   );

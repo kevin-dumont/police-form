@@ -1,19 +1,19 @@
-import moment from "moment";
+import type { Dayjs } from "dayjs";
 
-export type FormTraveler = {
+export type Traveler = {
   firstname: string;
   lastname: string;
   address: string;
   phone: string;
   email: string;
-  dateOfBirth: moment.Moment;
+  dateOfBirth: Dayjs;
   placeOfBirth: string;
   nationality: string;
   signature?: string;
 };
 
-export type TravelerFormData = {
-  travelers: FormTraveler[];
-  checkInDate: moment.Moment;
-  checkOutDate: moment.Moment;
+export type TravelerForm = {
+  travelers: Traveler[];
+  checkInDate: Dayjs;
+  checkOutDate: Dayjs;
 };

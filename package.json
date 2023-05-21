@@ -12,13 +12,22 @@
   ],
   "scripts": {
     "build": "lerna run build",
+    "web:start": "cd packages/web && yarn start",
     "tf:init": "terraform init",
     "tf:plan": "terraform plan",
-    "tf:apply": "terraform apply -auto-approve"
+    "tf:apply": "terraform apply -auto-approve",
+    "cache:clear": "rimraf cache"
   },
   "dependencies": {
+    "@aws/dynamodb-data-mapper": "^0.7.3",
+    "aws-lambda": "^1.0.7",
     "child_process": "^1.0.2",
+    "dayjs": "^1.11.7",
     "esbuild": "^0.17.19",
-    "lerna": "^6.6.2"
+    "lerna": "^6.6.2",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.1"
   }
 }

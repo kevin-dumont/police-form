@@ -1,23 +1,17 @@
-import moment from "moment";
 import { Form, Input, Card, DatePicker, Row, Col, Button, Space } from "antd";
-import {
-  PlusOutlined,
-  DeleteOutlined,
-  CloseOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, CloseOutlined, UserOutlined } from "@ant-design/icons";
 
 import { SignatureField } from "../SignatureField";
 import { CountrySelect } from "../CountrySelect";
-import { TravelerFormData } from "./types";
-import { travelersHas18years } from "./constants";
 
-import style from "./style.module.scss";
+import { travelersHas18years } from "./constants";
+import type { Dayjs } from "dayjs";
+import type { TravelerForm as TraverlerFormType } from "./types";
 
 export type TravelerFormProps = {
-  onFinish?: (values: TravelerFormData) => void;
-  checkInDate?: moment.Moment;
-  checkOutDate?: moment.Moment;
+  onFinish?: (values: TraverlerFormType) => void;
+  checkInDate?: Dayjs;
+  checkOutDate?: Dayjs;
   nbTravelers?: number;
 };
 
@@ -27,7 +21,7 @@ export const TravelerForm = ({
   checkOutDate,
   nbTravelers,
 }: TravelerFormProps) => {
-  const [form] = Form.useForm<TravelerFormData>();
+  const [form] = Form.useForm<TraverlerFormType>();
 
   const travelers = Form.useWatch("travelers", form);
 
@@ -58,7 +52,7 @@ export const TravelerForm = ({
         </Col>
         <Col md={8} sm={12} xs={24}>
           <Form.Item
-            name={`checkInDate`}
+            name={`checkOutDate`}
             rules={[{ required: true, message: "Field required" }]}
           >
             <DatePicker
@@ -74,6 +68,7 @@ export const TravelerForm = ({
           <>
             {fields.map(({ name, key, ...restField }, i) => (
               <Card
+                key={key}
                 title={
                   <Space>
                     <UserOutlined />
