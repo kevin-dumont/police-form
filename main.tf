@@ -1,18 +1,38 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = var.aws_region
 }
 
 # S3 bucket for web
-resource "aws_s3_bucket" "traveler-form-web" {
-  bucket = "traveler-form-web"
+resource "aws_s3_bucket" "traveler_form_web" {
+  bucket = var.bucket_name
 }
 
-resource "aws_s3_bucket_website_configuration" "traveler-form-web" {
-  bucket = aws_s3_bucket.traveler-form-web.id
+resource "aws_s3_bucket_website_configuration" "traveler_form_web" {
+  bucket = aws_s3_bucket.traveler_form_web.id
 
   index_document {
     suffix = "index.html"
   }
+}
+
+resource "aws_s3_bucket_acl" "traveler_form_web_acl" {
+  bucket = aws_s3_bucket.traveler_form_web.id
+  acl    = "public-read"
+}
+
+resource "aws_s3_bucket_policy" "traveler_form_web_policy" {
+  bucket = aws_s3_bucket.traveler_form_web.id
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = "*"
+        Action = "s3:GetObject",
+        Resource = "arn:aws:s3:::${var.bucket_name}/*"
+      },
+    ],
+  })
 }
 
 # DynamoDB Table
