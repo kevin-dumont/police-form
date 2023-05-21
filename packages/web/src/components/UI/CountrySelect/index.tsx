@@ -3,7 +3,7 @@ import { countries } from "countries-list";
 import { useMemo } from "react";
 
 const filterOptions: SelectProps["filterOption"] = (input, option) => {
-  const key = (option?.value as any) as keyof typeof countries;
+  const key = option?.value as any as keyof typeof countries;
 
   return (
     countries[key].name.toLowerCase().includes(input.toLowerCase()) ||
@@ -26,15 +26,13 @@ export const CountrySelect = ({ onChange, value }: CountrySelectProps) => {
   return (
     <Select
       style={{ width: "100%" }}
-      placeholder="Nationalité (Nationality)"
+      placeholder="Nationality"
       allowClear
       showSearch
       filterOption={filterOptions}
       optionLabelProp="label"
       onChange={onChange}
       value={value}
-      size="small"
-      bordered={false}
     >
       {sortedCountries.map(([code, data]) => {
         const label = (

@@ -1,7 +1,8 @@
-import { createRef } from "react";
-import { Button } from "antd";
+import { createRef, useCallback } from "react";
+import { Button, Card } from "antd";
 import SignatureCanvas from "react-signature-canvas";
 import style from "./style.module.scss";
+import { DeleteOutlined } from "@ant-design/icons";
 
 type SignatureFieldProps = {
   onChange?: (imgBase64: string | undefined) => void;
@@ -20,17 +21,30 @@ export const SignatureField = ({ onChange, value }: SignatureFieldProps) => {
   };
 
   return (
-    <>
+    <Card
+      title="Signature"
+      extra={
+        <Button
+          size="small"
+          onClick={onClear}
+          type="primary"
+          ghost
+          icon={<DeleteOutlined />}
+        >
+          Clear
+        </Button>
+      }
+      size="small"
+    >
       <SignatureCanvas
         canvasProps={{
-          height: 120,
-          width: 250,
-          className: style.sigCanvas
+          height: 90,
+          width: 230,
+          className: style.sigCanvas,
         }}
         onEnd={onEnd}
         ref={sigPadRef}
       />
-      <Button onClick={onClear}>Clear</Button>
-    </>
+    </Card>
   );
 };

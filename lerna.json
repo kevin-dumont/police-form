@@ -1,0 +1,9 @@
+{
+  "useWorkspaces": true,
+  "npmClient": "yarn",
+  "version": "0.0.0",
+  "ignoreChanges": [
+    "**/package.json"
+  ],
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
+}
