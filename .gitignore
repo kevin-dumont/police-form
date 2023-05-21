@@ -6,4 +6,3 @@ cache/
 .terraform/
 *.out
 *.state
-*.tfstate

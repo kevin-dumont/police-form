@@ -1,14 +1,15 @@
-name: "Deploy"
+name: "CI/CD Workflow"
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
-  pull_request:
 
 jobs:
-  terraform:
-    name: "Terraform"
+  build-validate-deploy:
     runs-on: ubuntu-latest
 
     env:
@@ -33,7 +34,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 0.13.5
+          terraform_version: 1.4.6
 
       - name: Terraform Init
         run: terraform init
@@ -43,6 +44,7 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Sync to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
@@ -50,3 +52,4 @@ jobs:
           args: --acl public-read --follow-symlinks --delete
           path_to_upload: "build"
           s3_bucket: "traveler-form-web"
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
