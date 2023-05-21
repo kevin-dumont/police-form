@@ -8,7 +8,9 @@ export function TravelerFormPage() {
   const { checkInDate, checkOutDate, nbTravelers } = useQueryInfos();
 
   const handleFinish: TravelerFormProps["onFinish"] = (travelerForm) => {
-    buildTravelerFormOutput(travelerForm);
+    const data = buildTravelerFormOutput(travelerForm);
+
+    console.log("data", data);
   };
 
   return (
