@@ -13,9 +13,9 @@
   "scripts": {
     "build": "lerna run build",
     "web:start": "cd packages/web && yarn start",
-    "tf:init": "terraform init",
-    "tf:plan": "terraform plan",
-    "tf:apply": "terraform apply -auto-approve",
+    "tf:init": "cd ./infrastructure && terraform init",
+    "tf:plan": "cd ./infrastructure && terraform plan",
+    "tf:apply": "cd ./infrastructure && terraform apply -auto-approve",
     "cache:clear": "rimraf cache"
   },
   "dependencies": {
