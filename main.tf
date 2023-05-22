@@ -15,24 +15,21 @@ resource "aws_s3_bucket_website_configuration" "traveler_form_web_website_config
   }
 }
 
-resource "aws_s3_bucket_acl" "traveler_form_web_acl" {
-  bucket = aws_s3_bucket.traveler_form_web.id
-  acl    = "public-read"
+data "aws_iam_policy_document" "s3_policy" {
+  statement {
+    actions   = ["s3:GetObject"]
+    resources = ["arn:aws:s3:::${var.bucket_name}/*"]
+
+    principals {
+      type        = "AWS"
+      identifiers = [aws_cloudfront_origin_access_identity.oai.iam_arn]
+    }
+  }
 }
 
 resource "aws_s3_bucket_policy" "traveler_form_web_policy" {
   bucket = aws_s3_bucket.traveler_form_web.id
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = "*"
-        Action = "s3:GetObject",
-        Resource = "arn:aws:s3:::${var.bucket_name}/*"
-      },
-    ],
-  })
+  policy = data.aws_iam_policy_document.s3_policy.json
 }
 
 # CloudFront
@@ -50,6 +47,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   is_ipv6_enabled     = true
   comment             = "CloudFront distribution for Traveler Form Web"
   default_root_object = "index.html"
+  
+  price_class = "PriceClass_100"
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -80,7 +79,19 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     cloudfront_default_certificate = true
   }
 
-  price_class = "PriceClass_100"
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code            = 404
+    response_code         = 200
+    response_page_path    = "/index.html"
+  }
+
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code            = 403
+    response_code         = 200
+    response_page_path    = "/index.html"
+  }
 }
 
 resource "aws_cloudfront_origin_access_identity" "oai" {
