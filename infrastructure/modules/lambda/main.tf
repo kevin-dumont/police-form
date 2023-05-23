@@ -14,6 +14,11 @@ module "allow_write_log" {
   role_id = aws_iam_role.iam_for_lambda.id
 }
 
+resource "aws_iam_role_policy_attachment" "attach" {
+  role       = aws_iam_role.iam_for_lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
 resource "aws_lambda_permission" "apigw" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
