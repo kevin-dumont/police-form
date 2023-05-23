@@ -7,48 +7,37 @@ resource "aws_lambda_function" "lambda" {
 
   runtime = "nodejs18.x"
 
-  environment {
-    variables = {
-      DYNAMODB_TABLE = var.dynamodb_table
+}
+
+resource "aws_lambda_permission" "apigw" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "${var.api_gateway_arn}/*/*"
+}
+
+module "policy_dynamodb_write" {
+  source = "../../allow_dynamodb_write"
+  role_id = aws_iam_role.iam_for_lambda.id
+  resources = [ var.dynamodb_table ]
+}
+
+data "aws_iam_policy_document" "assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
     }
+
+    actions = ["sts:AssumeRole"]
   }
 }
 
-resource "aws_iam_role_policy" "lambda" {
-  name = "lambda"
-  role = aws_iam_role.iam_for_lambda.id
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = [
-          "dynamodb:PutItem",
-          "dynamodb:GetItem",
-          "dynamodb:UpdateItem",
-          "dynamodb:DeleteItem"
-        ],
-        Effect = "Allow",
-        Resource = var.dynamodb_table
-      }
-    ]
-  })
-}
-
 resource "aws_iam_role" "iam_for_lambda" {
-  name = "iam_for_lambda"
-  
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = "sts:AssumeRole",
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        },
-        Effect = "Allow",
-        Sid = ""
-      },
-    ],
-  })
+  name               = "iam_for_lambda"
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }

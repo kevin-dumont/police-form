@@ -25,7 +25,7 @@ export class TravelerFormObject {
   }
 
   get [DynamoDbTable]() {
-    return "traveler_form";
+    return "traveler-form";
   }
 
   toJson() {
