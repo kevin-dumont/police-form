@@ -4,7 +4,7 @@ export type Traveler = {
   address: string;
   phone: string;
   email: string;
-  dateOfBirth: string;
+  dateOfBirth: Date;
   placeOfBirth: string;
   nationality: string;
   signature?: string;
@@ -13,6 +13,8 @@ export type Traveler = {
 export type TravelerForm = {
   id?: string;
   travelers: Traveler[];
-  checkInDate: string;
-  checkOutDate: string;
+  checkInDate: Date;
+  checkOutDate: Date;
+  createdTime?: Date;
+  updatedTime?: Date;
 };

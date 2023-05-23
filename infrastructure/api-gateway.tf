@@ -43,6 +43,7 @@ resource "aws_api_gateway_deployment" "deployment" {
 
 # APi gateway resources
 module "traveler_form_create_lambda" {
-  source         = "../packages/api/traveler-form/create/infrastructure"
-  dynamodb_table = aws_dynamodb_table.traveler_form.arn
+  source          = "../packages/api/traveler-form/create/infrastructure"
+  dynamodb_table  = aws_dynamodb_table.traveler_form.arn
+  api_gateway_arn = aws_api_gateway_rest_api.api.execution_arn
 }

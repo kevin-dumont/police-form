@@ -8,11 +8,11 @@ export const buildTravelerFormOutput = ({
   travelers,
 }: WebTravelerForm): ApiTravelerForm => {
   return {
-    checkInDate: checkInDate.startOf("day").toISOString(),
-    checkOutDate: checkOutDate.startOf("day").toISOString(),
+    checkInDate: checkInDate.startOf("day").toDate(),
+    checkOutDate: checkOutDate.startOf("day").toDate(),
     travelers: travelers.map(({ dateOfBirth, ...restTraveler }) => ({
       ...restTraveler,
-      dateOfBirth: dateOfBirth.startOf("day").toISOString(),
+      dateOfBirth: dateOfBirth.startOf("day").toDate(),
     })),
   };
 };

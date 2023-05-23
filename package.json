@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build": "lerna run build",
+    "build:api": "lerna run build --ignore @sygmaa/web",
     "web:start": "cd packages/web && yarn start",
     "tf:init": "cd ./infrastructure && terraform init",
     "tf:plan": "cd ./infrastructure && terraform plan",
@@ -20,11 +21,14 @@
   },
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
+    "@types/uuid": "^9.0.1",
     "aws-lambda": "^1.0.7",
+    "aws-sdk": "^2.1382.0",
     "child_process": "^1.0.2",
     "dayjs": "^1.11.7",
     "esbuild": "^0.17.19",
     "lerna": "^6.6.2",
+    "uuid": "^9.0.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
