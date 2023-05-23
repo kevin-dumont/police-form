@@ -1,7 +1,7 @@
 
 # S3 bucket for web
 resource "aws_s3_bucket" "traveler_form_web" {
-  bucket = var.bucket_name
+  bucket = var.web_bucket_name
 }
 
 resource "aws_s3_bucket_website_configuration" "traveler_form_web_website_configuration" {

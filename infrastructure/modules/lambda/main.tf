@@ -19,7 +19,7 @@ resource "aws_lambda_permission" "apigw" {
 }
 
 module "policy_dynamodb_write" {
-  source = "../../allow_dynamodb_write"
+  source = "../policies/allow_dynamodb_write"
   role_id = aws_iam_role.iam_for_lambda.id
   resources = [ var.dynamodb_table ]
 }
