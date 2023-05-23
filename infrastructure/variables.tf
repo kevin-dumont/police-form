@@ -1,9 +1,9 @@
-variable "aws_region" {
+variable "AWS_REGION" {
   description = "AWS Region"
   type = string
 } 
 
-variable "web_bucket_name" {
+variable "WEB_BUCKET_NAME" {
   description = "Name of the bucket"
   type = string
-} 
+}

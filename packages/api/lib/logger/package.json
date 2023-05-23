@@ -1,0 +1,13 @@
+{
+  "name": "@sygmaa/logger",
+  "version": "1.0.0",
+  "description": "Logger",
+  "license": "ISC",
+  "types": "src/index.ts",
+  "main": "src/index.ts",
+  "scripts": {},
+  "dependencies": {
+    "@sygmaa/core-dynamodb": "^1.0.0",
+    "@sygmaa/entities": "^1.0.0"
+  }
+}
