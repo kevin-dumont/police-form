@@ -3,7 +3,7 @@ variable "aws_region" {
   type = string
 } 
 
-variable "bucket_name" {
+variable "web_bucket_name" {
   description = "Name of the bucket"
   type = string
 } 

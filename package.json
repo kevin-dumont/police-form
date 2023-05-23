@@ -11,13 +11,16 @@
     "packages/**"
   ],
   "scripts": {
-    "build": "lerna run build",
-    "build:api": "lerna run build --ignore @sygmaa/web",
+    "web:build": "lerna run build --scope @sygmaa/web",
     "web:start": "cd packages/web && yarn start",
+    "web:test": "echo 'TODO'",
+    "api:build": "lerna run build --ignore @sygmaa/web",
+    "api:test": "echo 'TODO'",
     "tf:init": "cd ./infrastructure && terraform init",
     "tf:plan": "cd ./infrastructure && terraform plan",
     "tf:apply": "cd ./infrastructure && terraform apply -auto-approve",
-    "cache:clear": "rimraf cache"
+    "cache:clear": "rimraf cache",
+    "clear": "yarn cache:clear && rimraf ./node_modules"
   },
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",

@@ -1,2 +1,2 @@
-aws_region = "eu-west-1"
-bucket_name = "traveler-form-web"
+aws_region = var.AWS_REGION
+web_bucket_name = var.WEB_BUCKET_NAME
