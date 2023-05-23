@@ -8,6 +8,11 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+  pull-requests: read
+
 jobs:
   changes:
     runs-on: ubuntu-latest
@@ -15,6 +20,7 @@ jobs:
       api: ${{ steps.filter.outputs.api }}
       web: ${{ steps.filter.outputs.web }}
       infra: ${{ steps.filter.outputs.infra }}
+      ci: ${{ steps.filter.outputs.ci }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -26,28 +32,38 @@ jobs:
           filters: |
             api:
               - 'packages/api/src/**'
+              - 'package.json'
+              - 'yarn.lock'
             web:
               - 'packages/web/src/**'
+              - 'package.json'
+              - 'yarn.lock'
             infra:
               - 'infrastructure/**'
+            ci:
+              - '.github/workflows/ci.yml'
   test:
     needs: changes
-    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' }}
+    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.ci == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "18"
           cache: "yarn"
+
       - name: Install dependencies
         run: yarn --frozen-lockfile --prefer-offline
+
       - name: Test api
         run: yarn api:test
         if: ${{ needs.changes.outputs.api == 'true' }}
+
       - name: Test web
         run: yarn web:test
         if: ${{ needs.changes.outputs.web == 'true' }}
@@ -55,39 +71,62 @@ jobs:
   build:
     needs: changes
     runs-on: ubuntu-latest
-    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' }}
+    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.ci == 'true' }}
 
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "18"
           cache: "yarn"
+
       - name: Install dependencies
         run: yarn --frozen-lockfile --prefer-offline
+
       - name: Build web
         run: yarn web:build
-        if: ${{ needs.changes.outputs.web == 'true' }}
+        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.ci == 'true' }}
+
       - name: Build api
         run: yarn api:build
-        if: ${{ needs.changes.outputs.api == 'true' }}
+        if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true' }}
+
+      - name: Cache for deploy
+        uses: actions/cache@v3
+        with:
+          path: |
+            infrastructure
+            packages/**/*/infrastructure
+            packages/**/*/build
+          key: ${{ runner.os }}-build-${{ github.sha }}
 
   deploy:
     needs:
       - changes
+      - test
       - build
     runs-on: ubuntu-latest
-    if: needs.changes.outputs.infra == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true'
+    if: needs.changes.outputs.infra == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
     env:
-      TF_VAR_AWS_REGION: $AWS_REGION
-      TF_VAR_WEB_BUCKET_NAME: $WEB_BUCKET_NAME
+      TF_VAR_AWS_REGION: ${{ vars.AWS_REGION }}
+      TF_VAR_WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
 
     steps:
+      - name: Restore cache fro deploy
+        uses: actions/cache@v3
+        with:
+          path: |
+            infrastructure
+            packages/**/*/infrastructure
+            packages/**/*/build
+          key: ${{ runner.os }}-build-${{ github.sha }}
+
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: arn:aws:iam::272649283154:role/GitHubAction-AssumeRoleWithAction
           aws-region: eu-west-1
@@ -96,20 +135,28 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.4.6
-        if: needs.changes.outputs.infra == 'true'  || needs.changes.outputs.api == 'true'
+        if: needs.changes.outputs.infra == 'true'  || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
 
       - name: Terraform Init
         run: terraform init
-        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true'
+        working-directory: infrastructure
+        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
 
       - name: Terraform Validate
         run: terraform validate
-        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true'
+        working-directory: infrastructure
+        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
 
       - name: Terraform Plan
-        run: terraform plan
-        if: needs.changes.outputs.infra == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: terraform plan -out=./build/terraform.out -parallelism=100
+        working-directory: infrastructure
+        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve ./build/terraform.out
+        working-directory: infrastructure
+        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Deploy Web
-        run: aws s3 sync ./packages/web/build s3://$WEB_BUCKET_NAME --delete
-        if: needs.changes.outputs.web == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: aws s3 sync ./packages/web/build s3://${{ vars.WEB_BUCKET_NAME }} --delete
+        if: needs.changes.outputs.web == 'true' || needs.changes.outputs.ci == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'

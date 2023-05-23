@@ -4,7 +4,7 @@
   "description": "Lambda to create a traveler form",
   "license": "ISC",
   "scripts": {
-    "build": "node -e \"require('@sygmaa/core-build')\""
+    "build": "node -e \"require('@sygmaa/core-scripts')\""
   },
   "dependencies": {
     "@sygmaa/validators": "^1.0.0"

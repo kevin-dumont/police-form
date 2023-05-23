@@ -1,0 +1,6 @@
+{
+  "name": "@sygmaa/core-scripts",
+  "version": "1.0.0",
+  "description": "build",
+  "main": "./src/index.js"
+}

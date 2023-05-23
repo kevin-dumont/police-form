@@ -8,5 +8,4 @@ done <.env
 
 terraform -chdir=./infrastructure plan \
   -out=./build/terraform.out \
-  -parallelism=100 \
-  -lock=false
+  -parallelism=100

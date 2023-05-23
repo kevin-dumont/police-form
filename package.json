@@ -8,7 +8,7 @@
   "license": "ISC",
   "private": true,
   "workspaces": [
-    "packages/**"
+    "packages/**/*"
   ],
   "scripts": {
     "web:build": "lerna run build --scope @sygmaa/web",
@@ -16,8 +16,9 @@
     "web:test": "echo 'TODO'",
     "api:build": "lerna run build --ignore @sygmaa/web",
     "api:test": "echo 'TODO'",
-    "tf:init": "cd ./infrastructure && terraform init -lock=false",
+    "tf:init": "bash ./scripts/bash/terraform_init.sh",
     "tf:plan": "bash ./scripts/bash/terraform_plan.sh",
+    "tf:validate": "bash ./scripts/bash/terraform_validate.sh",
     "tf:apply": "bash ./scripts/bash/terraform_apply.sh",
     "cache:clear": "rimraf cache",
     "clear": "yarn cache:clear && rimraf ./node_modules"
