@@ -69,10 +69,10 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile --prefer-offline
       - name: Build web
-        run: yarn build:web
+        run: yarn web:build
         if: ${{ needs.changes.outputs.web == 'true' }}
       - name: Build api
-        run: yarn build:api
+        run: yarn api:build
         if: ${{ needs.changes.outputs.api == 'true' }}
 
   deploy:
@@ -111,5 +111,5 @@ jobs:
         if: needs.changes.outputs.infra == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Deploy Web
-        run: aws s3 sync ./packages/web/build s3://${{ secrets.WEB_BUCKET_NAME }} --delete
+        run: aws s3 sync ./packages/web/build s3://$WEB_BUCKET_NAME --delete
         if: needs.changes.outputs.web == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'

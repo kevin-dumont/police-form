@@ -10,7 +10,7 @@ export function TravelerFormPage() {
   const handleFinish: TravelerFormProps["onFinish"] = (travelerForm) => {
     const data = buildTravelerFormOutput(travelerForm);
 
-    console.log("data", data);
+    console.log("data1", data);
   };
 
   return (

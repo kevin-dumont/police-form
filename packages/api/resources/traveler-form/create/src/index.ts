@@ -1,10 +1,12 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
-
+import { AppLogger } from "@sygmaa/logger";
 import type { TravelerForm } from "@sygmaa/entities";
 import { validateTravelerForm } from "@sygmaa/validators";
 import { saveTravelerForm } from "@sygmaa/services";
 
 export const handler: APIGatewayProxyHandler = async (event) => {
+  AppLogger.info("Starting traveler-form-create", event);
+
   const form: TravelerForm = JSON.parse(event.body);
 
   const result = validateTravelerForm(form);
@@ -17,6 +19,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   }
 
   try {
+    AppLogger.log(form);
+
     await saveTravelerForm(form);
 
     return {
@@ -24,12 +28,11 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: JSON.stringify({ message: "Form saved successfully" }),
     };
   } catch (err) {
-    console.log(err);
+    AppLogger.error(err);
 
     return {
       statusCode: 500,
       body: JSON.stringify({
-        err,
         error: "An error occurred while saving the form",
       }),
     };
