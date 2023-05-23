@@ -19,8 +19,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   }
 
   try {
-    AppLogger.log(form);
-
     await saveTravelerForm(form);
 
     return {

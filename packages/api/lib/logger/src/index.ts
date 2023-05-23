@@ -1,11 +1,13 @@
 export type LogType = "error" | "warning" | "info" | "log" | "debug";
 
+/**
+ * An abstraction of console.[type] in case of a future
+ * migration to a log service like Sentry or other
+ */
 const Logger =
   (type: LogType) =>
   (...messages: any[]) => {
-    const prefix = `App ${type} : `;
-
-    console[type](prefix, ...messages);
+    console[type](...messages);
   };
 
 export const AppLogger = {

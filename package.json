@@ -17,8 +17,8 @@
     "api:build": "lerna run build --ignore @sygmaa/web",
     "api:test": "echo 'TODO'",
     "tf:init": "cd ./infrastructure && terraform init -lock=false",
-    "tf:plan": "cd ./infrastructure && terraform plan -out=./build/terraform.out -lock=false",
-    "tf:apply": "cd ./infrastructure && terraform apply -auto-approve ./build/terraform.out",
+    "tf:plan": "bash ./scripts/bash/terraform_plan.sh",
+    "tf:apply": "bash ./scripts/bash/terraform_apply.sh",
     "cache:clear": "rimraf cache",
     "clear": "yarn cache:clear && rimraf ./node_modules"
   },
