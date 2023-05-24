@@ -95,13 +95,10 @@ jobs:
         run: yarn api:build
         if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true' }}
 
-      - name: Cache for deploy
+      - name: Cache build
         uses: actions/cache@v3
         with:
-          path: |
-            infrastructure
-            packages/**/*/infrastructure
-            packages/**/*/build
+          path: packages/**/*/build
           key: ${{ runner.os }}-build-${{ github.sha }}
 
   deploy:
@@ -116,13 +113,26 @@ jobs:
       TF_VAR_WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
 
     steps:
-      - name: Restore cache fro deploy
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.6
+        if: needs.changes.outputs.infra == 'true'  || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
+
+      - name: Restore cached build
         uses: actions/cache@v3
         with:
-          path: |
-            infrastructure
-            packages/**/*/infrastructure
-            packages/**/*/build
+          path: packages/**/*/build
           key: ${{ runner.os }}-build-${{ github.sha }}
 
       - name: Configure AWS Credentials
@@ -131,31 +141,21 @@ jobs:
           role-to-assume: arn:aws:iam::272649283154:role/GitHubAction-AssumeRoleWithAction
           aws-region: eu-west-1
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.4.6
-        if: needs.changes.outputs.infra == 'true'  || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
-
       - name: Terraform Init
-        run: terraform init
-        working-directory: infrastructure
+        run: yarn tf:init
         if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
 
       - name: Terraform Validate
-        run: terraform validate
-        working-directory: infrastructure
+        run: yarn tf:validate
         if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
 
       - name: Terraform Plan
-        run: terraform plan -out=./build/terraform.out -parallelism=100
-        working-directory: infrastructure
-        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: yarn tf:plan
+        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve ./build/terraform.out
-        working-directory: infrastructure
-        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: yarn tf:init
+        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Deploy Web
         run: aws s3 sync ./packages/web/build s3://${{ vars.WEB_BUCKET_NAME }} --delete
