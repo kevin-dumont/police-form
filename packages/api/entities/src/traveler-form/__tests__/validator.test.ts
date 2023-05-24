@@ -24,12 +24,12 @@ describe("validateTravelerForm", () => {
 
     expect(res).toEqual({
       data: {
-        checkInDate: new Date("2023-05-09T22:00:00.000Z"),
-        checkOutDate: new Date("2023-05-08T22:00:00.000Z"),
+        checkInDate: "2023-05-09T22:00:00.000Z",
+        checkOutDate: "2023-05-08T22:00:00.000Z",
         travelers: [
           {
             address: "55 avenue de Juvisyy",
-            dateOfBirth: new Date("1992-02-03T23:00:00.000Z"),
+            dateOfBirth: "1992-02-03T23:00:00.000Z",
             email: "k.dumont1994@gmail.com",
             firstname: "Kévin",
             lastname: "DUMONT",
