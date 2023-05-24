@@ -15,7 +15,7 @@
     "web:start": "cd packages/web && yarn start",
     "web:test": "echo 'TODO'",
     "api:build": "lerna run build --ignore @sygmaa/web",
-    "api:test": "echo 'TODO'",
+    "api:test": "yarn jest --config ./packages/api/jest.config.js",
     "tf:init": "bash ./scripts/bash/terraform_init.sh",
     "tf:plan": "bash ./scripts/bash/terraform_plan.sh",
     "tf:validate": "bash ./scripts/bash/terraform_validate.sh",
@@ -31,11 +31,15 @@
     "child_process": "^1.0.2",
     "dayjs": "^1.11.7",
     "esbuild": "^0.17.19",
+    "jest": "^29.5.0",
     "lerna": "^6.6.2",
     "uuid": "^9.0.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "rimraf": "^5.0.1"
+    "@types/aws-lambda": "^8.10.115",
+    "@types/jest": "^29.5.1",
+    "rimraf": "^5.0.1",
+    "ts-jest": "^29.1.0"
   }
 }

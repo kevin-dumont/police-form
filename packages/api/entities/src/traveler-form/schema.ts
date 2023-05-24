@@ -1,0 +1,28 @@
+import { z } from "zod";
+
+const datetime = z
+  .string()
+  .datetime()
+  .transform((arg) => new Date(arg));
+
+const travelerSchema = z.object({
+  firstname: z.string(),
+  lastname: z.string(),
+  address: z.string(),
+  phone: z.string(),
+  email: z.string().email(),
+  dateOfBirth: datetime,
+  placeOfBirth: z.string(),
+  nationality: z.string(),
+  signature: z.string().optional(),
+});
+
+export const travelerFormSchema = z.object({
+  travelers: z.array(travelerSchema),
+  checkInDate: datetime,
+  checkOutDate: datetime,
+});
+
+export type TravelerFormInput = z.input<typeof travelerFormSchema>;
+
+export type TravelerFormOutput = z.infer<typeof travelerFormSchema>;

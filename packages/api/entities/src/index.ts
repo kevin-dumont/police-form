@@ -1,2 +1,3 @@
-export { TravelerFormObject } from "./traveler-form/traveler-form";
-export type { TravelerForm, Traveler } from "./traveler-form/types";
+export { TravelerFormObject, validateTravelerForm } from "./traveler-form";
+
+export type { TravelerFormInput, TravelerFormOutput } from "./traveler-form";

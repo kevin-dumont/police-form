@@ -1,10 +1,10 @@
-import { TravelerForm, TravelerFormObject } from "@sygmaa/entities";
+import { TravelerFormObject, TravelerFormOutput } from "@sygmaa/entities";
 import { getDataMapper } from "@sygmaa/core-dynamodb";
 
 import { v1 as uuid } from "uuid";
 import { AppLogger } from "@sygmaa/logger";
 
-export async function saveTravelerForm(form: TravelerForm) {
+export async function saveTravelerForm({ ...form }: TravelerFormOutput) {
   const date = new Date();
 
   AppLogger.log("Saving", {
