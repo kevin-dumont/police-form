@@ -1,12 +1,5 @@
 import { DynamoDbSchema, DynamoDbTable } from "@aws/dynamodb-data-mapper";
-import { TravelerFormOutput } from "./schema";
 import { TravelerFormObjectInput } from "./types";
-
-const DateIsoString = {
-  type: "Custom",
-  marshall: (input: string) => ({ S: new Date(input).toISOString() }),
-  unmarshall: (persistedValue: { S: string }) => new Date(persistedValue.S),
-};
 
 const TravelerDbSchema = {
   firstname: { type: "String" },
@@ -14,7 +7,7 @@ const TravelerDbSchema = {
   address: { type: "String" },
   phone: { type: "String" },
   email: { type: "String" },
-  dateOfBirth: DateIsoString,
+  dateOfBirth: { type: "String" },
   placeOfBirth: { type: "String" },
   nationality: { type: "String" },
   signature: { type: "String" },
@@ -36,8 +29,8 @@ export class TravelerFormObject {
   get [DynamoDbSchema]() {
     return {
       id: { type: "String", keyType: "HASH" },
-      checkInDate: DateIsoString,
-      checkOutDate: DateIsoString,
+      checkInDate: { type: "String" },
+      checkOutDate: { type: "String" },
       travelers: {
         type: "List",
         memberType: {
@@ -45,8 +38,8 @@ export class TravelerFormObject {
           members: TravelerDbSchema,
         },
       },
-      createdTime: DateIsoString,
-      updatedTime: DateIsoString,
+      createdTime: { type: "String" },
+      updatedTime: { type: "String" },
     };
   }
 }

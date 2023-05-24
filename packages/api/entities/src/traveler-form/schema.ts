@@ -1,9 +1,6 @@
 import { z } from "zod";
 
-const datetime = z
-  .string()
-  .datetime()
-  .transform((arg) => new Date(arg));
+const datetime = z.string().datetime();
 
 const travelerSchema = z.object({
   firstname: z.string(),

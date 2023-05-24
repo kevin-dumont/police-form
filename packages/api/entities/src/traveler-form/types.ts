@@ -2,8 +2,8 @@ import { TravelerFormOutput } from "./schema";
 
 export type NonEditableFields = {
   id: string;
-  createdTime: Date;
-  updatedTime: Date;
+  createdTime: string;
+  updatedTime: string;
 };
 
 export type TravelerFormObjectInput = TravelerFormOutput & NonEditableFields;
