@@ -1,4 +1,4 @@
-import type { TravelerForm as ApiTravelerForm } from "@sygmaa/entities";
+import type { TravelerFormInput as ApiTravelerForm } from "@sygmaa/entities";
 import type { TravelerForm as WebTravelerForm } from "../../components/UI/TravelerForm/types";
 import dayjs from "dayjs";
 
@@ -8,11 +8,11 @@ export const buildTravelerFormOutput = ({
   travelers,
 }: WebTravelerForm): ApiTravelerForm => {
   return {
-    checkInDate: checkInDate.startOf("day").toDate(),
-    checkOutDate: checkOutDate.startOf("day").toDate(),
+    checkInDate: checkInDate.startOf("day").toISOString(),
+    checkOutDate: checkOutDate.startOf("day").toISOString(),
     travelers: travelers.map(({ dateOfBirth, ...restTraveler }) => ({
       ...restTraveler,
-      dateOfBirth: dateOfBirth.startOf("day").toDate(),
+      dateOfBirth: dateOfBirth.startOf("day").toISOString(),
     })),
   };
 };
