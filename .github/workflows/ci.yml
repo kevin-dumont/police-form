@@ -33,11 +33,11 @@ jobs:
         with:
           filters: |
             api:
-              - 'packages/api/src/**'
+              - 'packages/api/**/*/src'
               - 'package.json'
               - 'yarn.lock'
             web:
-              - 'packages/web/src/**'
+              - 'packages/web/**/*/src'
               - 'package.json'
               - 'yarn.lock'
             infra:
