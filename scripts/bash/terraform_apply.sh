@@ -1,9 +1,5 @@
 #!/bin/bash
 
-while IFS='=' read -r name value; do
-  if [ -z "${!name:-}" ]; then
-    export "$name=$value"
-  fi
-done <.env
+export $(grep -v '^#' .env | xargs)
 
 terraform -chdir=./infrastructure apply -auto-approve ./build/terraform.out
