@@ -1,39 +1,8 @@
 
-# S3 bucket for web
-resource "aws_s3_bucket" "traveler_form_web" {
-  bucket = var.WEB_BUCKET_NAME
-}
-
-resource "aws_s3_bucket_website_configuration" "traveler_form_web_website_configuration" {
-  bucket = aws_s3_bucket.traveler_form_web.id
-
-  index_document {
-    suffix = "index.html"
-  }
-}
-
-data "aws_iam_policy_document" "s3_policy" {
-  statement {
-    actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::${var.WEB_BUCKET_NAME}/*"]
-
-    principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.oai.iam_arn]
-    }
-  }
-}
-
-resource "aws_s3_bucket_policy" "traveler_form_web_policy" {
-  bucket = aws_s3_bucket.traveler_form_web.id
-  policy = data.aws_iam_policy_document.s3_policy.json
-}
-
-# CloudFront
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = aws_s3_bucket.traveler_form_web.bucket_regional_domain_name
-    origin_id   = var.WEB_BUCKET_NAME
+    domain_name = var.bucket_domain_name
+    origin_id   = var.bucket_name
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
@@ -50,7 +19,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = var.WEB_BUCKET_NAME
+    target_origin_id = var.bucket_name
 
     forwarded_values {
       query_string = false

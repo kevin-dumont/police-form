@@ -1,5 +1,4 @@
 
-# DynamoDB Table
 resource "aws_dynamodb_table" "traveler_form" {
   name           = "traveler-form"
   hash_key       = "id"
