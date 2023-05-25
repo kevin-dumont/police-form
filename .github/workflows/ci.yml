@@ -20,7 +20,6 @@ jobs:
       api: ${{ steps.filter.outputs.api }}
       web: ${{ steps.filter.outputs.web }}
       infra: ${{ steps.filter.outputs.infra }}
-      ci: ${{ steps.filter.outputs.ci }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -46,38 +45,38 @@ jobs:
               - '.github/workflows/ci.yml'
   test:
     needs: changes
-    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.ci == 'true' || needs.changes.outputs.infra == 'true' }}
+    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.infra == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true' }}
+        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true'  }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
           cache: "yarn"
-        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true' }}
+        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true'  }}
 
       - name: Install dependencies
         run: yarn --frozen-lockfile --prefer-offline
-        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true' }}
+        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true'  }}
 
       - name: Test api
         run: yarn api:test
-        if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true' }}
+        if: ${{ needs.changes.outputs.api == 'true' }}
 
       - name: Test web
         run: yarn web:test
-        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.ci == 'true' }}
+        if: ${{ needs.changes.outputs.web == 'true' }}
 
   build:
     needs: changes
     runs-on: ubuntu-latest
-    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.infra == 'true' || needs.changes.outputs.ci == 'true' }}
+    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.infra == 'true' }}
 
     steps:
       - name: Checkout code
@@ -97,11 +96,11 @@ jobs:
       - name: Build web
         run: yarn web:build
         shell: bash
-        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.ci == 'true' }}
+        if: ${{ needs.changes.outputs.web == 'true' }}
 
       - name: Build api
         run: yarn api:build
-        if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.infra == 'true' || needs.changes.outputs.ci == 'true' }}
+        if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.infra == 'true' }}
 
       - name: Cache build
         uses: actions/cache@v3
@@ -115,7 +114,7 @@ jobs:
       - test
       - build
     runs-on: ubuntu-latest
-    if: needs.changes.outputs.infra == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
+    if: needs.changes.outputs.infra == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true'
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
       WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
@@ -137,7 +136,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.4.6
-        if: needs.changes.outputs.infra == 'true'  || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
+        if: needs.changes.outputs.infra == 'true'  || needs.changes.outputs.api == 'true'
 
       - name: Restore cached build
         uses: actions/cache@v3
@@ -153,22 +152,22 @@ jobs:
 
       - name: Terraform Init
         run: yarn tf:init
-        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
+        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true'
 
       - name: Terraform Validate
         run: yarn tf:validate
-        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
+        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true'
 
       - name: Terraform Plan
         run: yarn tf:plan
         shell: bash
-        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Terraform Apply
         run: yarn tf:apply
         shell: bash
-        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Deploy Web
         run: aws s3 sync ./packages/web/build s3://${{ vars.WEB_BUCKET_NAME }} --delete
-        if: needs.changes.outputs.web == 'true' || needs.changes.outputs.ci == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: needs.changes.outputs.web == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
