@@ -2,6 +2,14 @@ provider "aws" {
   region = var.AWS_REGION
 }
 
+terraform {
+  backend "s3" {
+    bucket = "traveler-form-terraform"
+    key    = "terraform.tfstate"
+    region = "eu-west-1"
+  }
+}
+
 # API
 module "dynamodb" {
   source = "../packages/api/infrastructure/dynamodb"

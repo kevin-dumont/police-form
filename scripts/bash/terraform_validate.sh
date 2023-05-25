@@ -1,5 +1,5 @@
 #!/bin/bash
 
-export $(grep -v '^#' .env | xargs)
+. ./scripts/bash/setup_tf_env.sh
 
 terraform -chdir=./infrastructure validate
