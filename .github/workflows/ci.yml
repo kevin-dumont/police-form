@@ -114,8 +114,9 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.changes.outputs.infra == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true'
     env:
-      TF_VAR_AWS_REGION: ${{ vars.AWS_REGION }}
-      TF_VAR_WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
+      WEB_API_KEY: ${{ vars.WEB_API_KEY }}
 
     steps:
       - name: Checkout code
