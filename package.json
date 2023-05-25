@@ -11,8 +11,8 @@
     "packages/**/*"
   ],
   "scripts": {
-    "web:build": "source scripts/bash/setup_web_env.sh && lerna run build --scope @sygmaa/web",
-    "web:start": "source scripts/bash/setup_web_env.sh && cd packages/web && yarn start",
+    "web:build": ". scripts/bash/setup_web_env.sh && lerna run build --scope @sygmaa/web",
+    "web:start": ". scripts/bash/setup_web_env.sh && cd packages/web && yarn start",
     "web:test": "echo 'TODO'",
     "api:build": "lerna run build --ignore @sygmaa/web",
     "api:test": "yarn jest --config ./packages/api/jest.config.js",
