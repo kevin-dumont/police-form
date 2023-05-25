@@ -159,7 +159,7 @@ jobs:
         if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Terraform Apply
-        run: yarn tf:init
+        run: yarn tf:apply
         if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Deploy Web
