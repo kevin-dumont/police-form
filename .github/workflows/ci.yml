@@ -74,7 +74,7 @@ jobs:
   build:
     needs: changes
     runs-on: ubuntu-latest
-    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.ci == 'true' }}
+    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.infra == 'true' || needs.changes.outputs.ci == 'true' }}
 
     steps:
       - name: Checkout code
@@ -98,7 +98,7 @@ jobs:
 
       - name: Build api
         run: yarn api:build
-        if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true' }}
+        if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.infra == 'true' || needs.changes.outputs.ci == 'true' }}
 
       - name: Cache build
         uses: actions/cache@v3
