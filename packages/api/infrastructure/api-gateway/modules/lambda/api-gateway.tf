@@ -2,7 +2,7 @@
 resource "aws_api_gateway_integration" "integration" {
   rest_api_id             = var.api_gateway_config.rest_api_id
   resource_id             = aws_api_gateway_resource.resource.id
-  http_method             = var.api_gateway_config.http_method
+  http_method             = aws_api_gateway_method.method.http_method
   
   type                    = "AWS_PROXY"
   integration_http_method = var.api_gateway_config.http_method
