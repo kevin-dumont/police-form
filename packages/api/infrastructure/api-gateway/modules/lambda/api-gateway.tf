@@ -22,29 +22,29 @@ resource "aws_api_gateway_method" "method" {
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_method_response" "cors_response" {
-  rest_api_id = var.api_gateway_config.rest_api_id
-  resource_id = aws_api_gateway_resource.resource.id
-  http_method = var.api_gateway_config.http_method
-  status_code = "200"
+# resource "aws_api_gateway_method_response" "cors_response" {
+#   rest_api_id = var.api_gateway_config.rest_api_id
+#   resource_id = aws_api_gateway_resource.resource.id
+#   http_method = var.api_gateway_config.http_method
+#   status_code = "200"
 
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = true,
-    "method.response.header.Access-Control-Allow-Headers" = true,
-    "method.response.header.Access-Control-Allow-Methods" = true,
-  }
-}
+#   response_parameters = {
+#     "method.response.header.Access-Control-Allow-Origin" = true,
+#     "method.response.header.Access-Control-Allow-Headers" = true,
+#     "method.response.header.Access-Control-Allow-Methods" = true,
+#   }
+# }
 
-resource "aws_api_gateway_integration_response" "cors_integration" {
-  depends_on  = [aws_api_gateway_method_response.cors_response]
-  rest_api_id = var.api_gateway_config.rest_api_id
-  resource_id = aws_api_gateway_resource.resource.id
-  http_method = var.api_gateway_config.http_method
-  status_code = "200"
+# resource "aws_api_gateway_integration_response" "cors_integration" {
+#   depends_on  = [aws_api_gateway_method_response.cors_response]
+#   rest_api_id = var.api_gateway_config.rest_api_id
+#   resource_id = aws_api_gateway_resource.resource.id
+#   http_method = var.api_gateway_config.http_method
+#   status_code = "200"
 
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = "\"${join(",", var.allowed_origins)}\"",
-    "method.response.header.Access-Control-Allow-Headers" = "\"${join(",", var.allowed_headers)}\"",
-    "method.response.header.Access-Control-Allow-Methods" = "\"${join(",", var.allowed_methods)}\""
-  }
-}
+#   response_parameters = {
+#     "method.response.header.Access-Control-Allow-Origin" = "\"${join(",", var.allowed_origins)}\"",
+#     "method.response.header.Access-Control-Allow-Headers" = "\"${join(",", var.allowed_headers)}\"",
+#     "method.response.header.Access-Control-Allow-Methods" = "\"${join(",", var.allowed_methods)}\""
+#   }
+# }
