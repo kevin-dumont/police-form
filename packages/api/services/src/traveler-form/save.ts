@@ -8,19 +8,14 @@ import { AppLogger } from "@sygmaa/logger";
 export async function saveTravelerForm({ ...form }: TravelerFormOutput) {
   const date = dayjs().toISOString();
 
-  AppLogger.log("Saving", {
+  const travelerForm = {
     ...form,
     id: uuid(),
     createdTime: date,
     updatedTime: date,
-  });
+  };
 
-  return await getDataMapper().put(
-    new TravelerFormObject({
-      ...form,
-      id: uuid(),
-      createdTime: date,
-      updatedTime: date,
-    })
-  );
+  AppLogger.log("Saving", travelerForm);
+
+  return await getDataMapper().put(new TravelerFormObject(travelerForm));
 }
