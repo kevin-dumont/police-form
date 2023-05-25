@@ -3,7 +3,7 @@ output "function_invoke_arn" {
   description = "The ARN of the lambda function"
 }
 
-output "integration" {
-  value = aws_api_gateway_integration.integration
-  description = "The Api Gateway integration"
-}
+# output "integration" {
+#   value = aws_api_gateway_integration.integration
+#   description = "The Api Gateway integration"
+# }
