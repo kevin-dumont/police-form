@@ -16,10 +16,12 @@ resource "aws_api_gateway_resource" "resource" {
 }
 
 resource "aws_api_gateway_method" "method" {
-  resource_id   = aws_api_gateway_resource.resource.id
-  rest_api_id   = var.api_gateway_config.rest_api_id
-  http_method   = var.api_gateway_config.http_method
-  authorization = "NONE"
+  resource_id      = aws_api_gateway_resource.resource.id
+  rest_api_id      = var.api_gateway_config.rest_api_id
+  http_method      = var.api_gateway_config.http_method
+  
+  authorization    = "NONE"
+  api_key_required = true
 }
 
 # resource "aws_api_gateway_method_response" "cors_response" {

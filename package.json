@@ -14,6 +14,7 @@
     "web:build": ". scripts/bash/setup_web_env.sh && lerna run build --scope @sygmaa/web",
     "web:start": ". scripts/bash/setup_web_env.sh && cd packages/web && yarn start",
     "web:test": "echo 'TODO'",
+    "web:publish": "bash ./scripts/bash/sync_web.sh",
     "api:build": "lerna run build --ignore @sygmaa/web",
     "api:test": "yarn jest --config ./packages/api/jest.config.js",
     "preapi:build": "yarn api:clear",
@@ -21,8 +22,8 @@
     "tf:plan": "bash ./scripts/bash/terraform_plan.sh",
     "tf:validate": "bash ./scripts/bash/terraform_validate.sh",
     "tf:apply": "bash ./scripts/bash/terraform_apply.sh",
-    "api:clear": "lerna run build --ignore @sygmaa/web",
-    "cache:clear": "rimraf packages/api/**/*/build",
+    "api:clear": "rimraf packages/api/**/*/build",
+    "cache:clear": "rimraf ./cache",
     "clear": "yarn cache:clear && rimraf ./node_modules"
   },
   "dependencies": {

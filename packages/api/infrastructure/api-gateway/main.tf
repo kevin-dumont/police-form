@@ -8,7 +8,7 @@ resource "aws_api_gateway_rest_api" "api" {
 
 resource "aws_api_gateway_deployment" "deployment" {
   depends_on  = [module.traveler_form_create_lambda.integration]
-  
+
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = "prod"
 }
@@ -21,6 +21,17 @@ resource "aws_api_gateway_usage_plan" "usage_plan" {
   api_stages {
     api_id = aws_api_gateway_rest_api.api.id
     stage  = aws_api_gateway_deployment.deployment.stage_name
+  }
+
+  quota_settings {
+    limit  = 10000
+    offset = 2
+    period = "WEEK"
+  }
+
+  throttle_settings {
+    burst_limit = 20
+    rate_limit  = 40
   }
 }
 
