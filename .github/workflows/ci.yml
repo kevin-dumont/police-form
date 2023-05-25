@@ -93,6 +93,7 @@ jobs:
 
       - name: Build web
         run: yarn web:build
+        shell: bash
         if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.ci == 'true' }}
 
       - name: Build api
@@ -156,10 +157,12 @@ jobs:
 
       - name: Terraform Plan
         run: yarn tf:plan
+        shell: bash
         if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Terraform Apply
         run: yarn tf:apply
+        shell: bash
         if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true' || needs.changes.outputs.ci == 'true') && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Deploy Web
