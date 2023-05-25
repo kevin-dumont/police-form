@@ -16,11 +16,13 @@
     "web:test": "echo 'TODO'",
     "api:build": "lerna run build --ignore @sygmaa/web",
     "api:test": "yarn jest --config ./packages/api/jest.config.js",
+    "preapi:build": "yarn api:clear",
     "tf:init": "bash ./scripts/bash/terraform_init.sh",
     "tf:plan": "bash ./scripts/bash/terraform_plan.sh",
     "tf:validate": "bash ./scripts/bash/terraform_validate.sh",
     "tf:apply": "bash ./scripts/bash/terraform_apply.sh",
-    "cache:clear": "rimraf cache",
+    "api:clear": "lerna run build --ignore @sygmaa/web",
+    "cache:clear": "rimraf packages/api/**/*/build",
     "clear": "yarn cache:clear && rimraf ./node_modules"
   },
   "dependencies": {

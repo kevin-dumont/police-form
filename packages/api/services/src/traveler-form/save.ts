@@ -15,7 +15,7 @@ export async function saveTravelerForm({ ...form }: TravelerFormOutput) {
     updatedTime: date,
   };
 
-  AppLogger.log("Submitted form", travelerForm);
+  AppLogger.log("Submitted form 2", travelerForm);
 
   return await getDataMapper().put(new TravelerFormObject(travelerForm));
 }

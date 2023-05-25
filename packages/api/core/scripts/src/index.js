@@ -23,6 +23,7 @@ function execShellCommand(cmd) {
   await build(config);
 
   const dateTime = 197001010000;
+
   console.time("🚀 built in");
 
   await execShellCommand(

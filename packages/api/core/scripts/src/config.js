@@ -5,7 +5,7 @@ module.exports = {
   entryPoints: ["src/index.ts"],
   outfile: "build/index.js",
   treeShaking: true,
-  allowOverwrite: false,
+  allowOverwrite: true,
   loader: {
     ".node": "copy",
   },

@@ -9,6 +9,6 @@ resource "aws_dynamodb_table" "traveler_form" {
   
   attribute {
     name = "id"
-    type = "N"
+    type = "S"
   }
 }
