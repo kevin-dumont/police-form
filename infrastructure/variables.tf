@@ -7,3 +7,8 @@ variable "WEB_BUCKET_NAME" {
   description = "Name of the bucket"
   type = string
 }
+
+variable "API_KEY" {
+  description = "Api gateway api key"
+  type = string
+}

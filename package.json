@@ -11,8 +11,8 @@
     "packages/**/*"
   ],
   "scripts": {
-    "web:build": "lerna run build --scope @sygmaa/web",
-    "web:start": "cd packages/web && yarn start",
+    "web:build": "source scripts/bash/setup_web_env.sh && lerna run build --scope @sygmaa/web",
+    "web:start": "source scripts/bash/setup_web_env.sh && cd packages/web && yarn start",
     "web:test": "echo 'TODO'",
     "api:build": "lerna run build --ignore @sygmaa/web",
     "api:test": "yarn jest --config ./packages/api/jest.config.js",
@@ -30,6 +30,7 @@
     "@types/uuid": "^9.0.1",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1382.0",
+    "axios": "^1.4.0",
     "child_process": "^1.0.2",
     "dayjs": "^1.11.7",
     "esbuild": "^0.17.19",
