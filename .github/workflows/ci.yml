@@ -41,7 +41,7 @@ jobs:
               - 'yarn.lock'
             infra:
               - 'infrastructure/**'
-              - '**/infrastructure/**'
+              - 'packages/**/*/infrastructure'
             ci:
               - '.github/workflows/ci.yml'
   test:
