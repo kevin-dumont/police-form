@@ -1,0 +1,27 @@
+paths:
+  "/traveler-form":
+    post:
+      tags:
+        - traveler form
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        "201":
+          description: 201 response
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${aws_account}:function:traveler_form_create/invocations
+        httpMethod: POST
+        responses:
+          default:
+            statusCode: "201"
+            responseTemplates:
+              $ref: response/application-json.yaml
+        requestTemplates:
+          $ref: "request/application-json.yaml"
+        passthroughBehavior: when_no_templates
+        contentHandling: CONVERT_TO_TEXT
+    options:
+      $ref: options/option.yaml

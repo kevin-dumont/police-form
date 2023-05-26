@@ -150,6 +150,10 @@ jobs:
           role-to-assume: arn:aws:iam::272649283154:role/GitHubAction-AssumeRoleWithAction
           aws-region: eu-west-1
 
+      - name: Build swagger
+        run: yarn swagger:buid
+        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true'
+
       - name: Terraform Init
         run: yarn tf:init
         if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true'

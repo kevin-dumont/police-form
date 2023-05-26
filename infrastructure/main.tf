@@ -2,6 +2,7 @@ provider "aws" {
   region = var.AWS_REGION
 }
 
+
 terraform {
   backend "s3" {
     bucket = "traveler-form-terraform"
@@ -9,6 +10,10 @@ terraform {
     region = "eu-west-1"
   }
 }
+
+data "aws_caller_identity" "current" {}
+
+data "aws_region" "current" {}
 
 # API
 module "dynamodb" {
@@ -22,8 +27,11 @@ module "api_gateway" {
   description = "Traveler Form API"
   api_key     = var.API_KEY
 
-  allowed_origins = ["https://bnbcompanion.com", "https://checkin.bnbcompanion.com", "http://localhost:3000"]
-  
+  config = {
+    aws_region = data.aws_region.current.name
+    aws_account = data.aws_caller_identity.current.account_id
+  }
+    
   dynamodb_tables = {
     traveler_form_arn = module.dynamodb.tables.traveler_form
   }

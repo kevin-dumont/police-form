@@ -13,15 +13,17 @@ variable "api_key" {
   description = "The api key"
 }
 
-variable "allowed_origins" {
-  type        = list(string)
-  description = "Allowed origins"
-  default     = ["*"]
-}
-
 variable "dynamodb_tables" {
   description = "DynamoDB Tables"
   type = object({
     traveler_form_arn = string
+  })
+}
+
+variable "config" {
+  description = "Config"
+  type = object({
+    aws_account = string
+    aws_region = string
   })
 }

@@ -20,15 +20,6 @@ resource "aws_iam_role_policy_attachment" "attach" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_lambda_permission" "apigw" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda.function_name
-  principal     = "apigateway.amazonaws.com"
-
-  source_arn = "${var.api_gateway_config.rest_api_arn}/*/*"
-}
-
 data "aws_iam_policy_document" "assume_role" {
   statement {
     effect = "Allow"

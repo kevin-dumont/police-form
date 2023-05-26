@@ -4,13 +4,31 @@
 resource "aws_api_gateway_rest_api" "api" {
   name        = var.name
   description = var.description
+  body        = local.template.swagger
 }
 
 resource "aws_api_gateway_deployment" "deployment" {
-  depends_on  = [module.traveler_form_create_lambda.integration]
-
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = "prod"
+
+  # Forces a new deployment after API changes
+  triggers = {
+    redeployment = sha1(local.template.swagger)
+  }
+  
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_api_gateway_documentation_version" "documentation" {
+  version     = "v1.0.0"
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  description = "Inflow public API DOC, deploy at ${timestamp()}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ## Usage plan for Api Key

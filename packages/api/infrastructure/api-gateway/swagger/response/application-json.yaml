@@ -1,0 +1,6 @@
+application/json: >-
+  $input.json('$.body')
+  #set($statusCode = $input.path('$.statusCode'))
+  #if($statusCode != 200)
+  #set($context.responseOverride.status = $statusCode)
+  #end

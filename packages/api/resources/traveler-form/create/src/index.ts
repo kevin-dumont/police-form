@@ -22,7 +22,7 @@ export const handler: Handler<{ body: string }> = async (event) => {
     await saveTravelerForm(result.data);
 
     return {
-      statusCode: 200,
+      statusCode: 201,
       body: JSON.stringify({ message: "Form saved successfully" }),
     };
   } catch (err) {

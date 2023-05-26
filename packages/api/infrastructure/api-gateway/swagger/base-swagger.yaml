@@ -1,0 +1,30 @@
+---
+swagger: "2.0"
+info:
+  version: "2021-02-22T11:39:56Z"
+  title: "Traveler_form_api"
+basePath: "v1"
+schemes:
+  - "https"
+paths:
+securityDefinitions:
+definitions:
+  Empty:
+    type: "object"
+    title: "Empty Schema"
+tags:
+  - name: "asset"
+    description: "Allow to create or get an asset"
+  - name: "program"
+    description: "Manage program"
+  - name: "clip"
+    description: "Allow to manage clip"
+  - name: "stream"
+    description: "Allow to get stream(s)"
+  - name: "taxonomy"
+    description: "Inflow taiga & chapca notification endpoint"
+  - name: "callback"
+    description: "Inflow private endpoint"
+  - name: "playout"
+    description: "Allow manager playout"
+  - name: options
