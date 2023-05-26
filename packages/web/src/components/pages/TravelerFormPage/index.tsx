@@ -3,7 +3,7 @@ import { Result, Typography, notification } from "antd";
 import { useQueryInfos } from "./hooks/useQueryInfos";
 import style from "./style.module.scss";
 import { buildTravelerFormOutput } from "../../../services/builders/traveler-form";
-import { createTravelerForm } from "../../../services/http-requests/traverler-form/create";
+import { createTravelerForm } from "../../../services/http-requests/traveler-form/create";
 import { useState } from "react";
 
 export function TravelerFormPage() {

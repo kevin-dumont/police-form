@@ -4,35 +4,34 @@ import { TravelerFormInput, validateTravelerForm } from "@sygmaa/entities";
 
 import { saveTravelerForm } from "@sygmaa/services";
 
-export const handler: Handler<{ body: string }> = async (event) => {
+export const handler: Handler<{ body: TravelerFormInput }> = async (event) => {
   AppLogger.info("Starting traveler-form-create", event);
 
-  const form: TravelerFormInput = JSON.parse(event.body);
-
-  const result = validateTravelerForm(form);
+  const result = validateTravelerForm(event.body);
 
   if (!result.success) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: result.error }),
+      body: { error: result.error },
     };
   }
 
   try {
-    await saveTravelerForm(result.data);
+    const res = await saveTravelerForm(result.data);
 
     return {
       statusCode: 201,
-      body: JSON.stringify({ message: "Form saved successfully" }),
+      body: {
+        message: "Form saved successfully",
+        data: res,
+      },
     };
   } catch (err) {
     AppLogger.error(err);
 
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        error: "An error occurred while saving the form",
-      }),
+      body: { error: "An error occurred while saving the form" },
     };
   }
 };
