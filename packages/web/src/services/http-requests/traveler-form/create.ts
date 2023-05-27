@@ -1,13 +1,14 @@
-import axios from "axios";
 import { apiKey, apiUri } from "../../../config/env";
 import { TravelerFormInput } from "@sygmaa/entities";
 
 export const createTravelerForm = (travelerForm: TravelerFormInput) => {
-  return axios.post(`${apiUri}/traveler-form`, travelerForm, {
-    responseType: "json",
+  return fetch(`${apiUri}/prod/traveler-form`, {
+    body: JSON.stringify(travelerForm),
+    method: "POST",
     headers: {
-      "Content-Type": "json",
+      "Content-Type": "application/json",
       "x-api-key": apiKey,
     },
+    redirect: "follow",
   });
 };

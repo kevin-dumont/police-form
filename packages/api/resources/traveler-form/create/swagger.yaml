@@ -10,6 +10,13 @@ paths:
       responses:
         "201":
           description: 201 response
+          headers:
+            Access-Control-Allow-Origin:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Headers:
+              type: string
       x-amazon-apigateway-integration:
         type: aws
         uri: arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${aws_account}:function:traveler_form_create/invocations
@@ -17,6 +24,10 @@ paths:
         responses:
           default:
             statusCode: "201"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods: "'*'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               $ref: response/application-json.yaml
         requestTemplates:
