@@ -9,5 +9,5 @@ cache/
 *.state
 
 # Swagger
-packages/api/infrastructure/api-gateway/swagger/tf_swagger.yaml
-packages/api/infrastructure/api-gateway/swagger/tmp_merge.yaml
+infrastructure/*/api-gateway/swagger.build.tmp.yaml
+infrastructure/*/api-gateway/swagger.build.yaml

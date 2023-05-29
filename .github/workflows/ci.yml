@@ -14,110 +14,41 @@ permissions:
   pull-requests: read
 
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      api: ${{ steps.filter.outputs.api }}
-      web: ${{ steps.filter.outputs.web }}
-      infra: ${{ steps.filter.outputs.infra }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Paths Changes Filter
-        uses: dorny/paths-filter@v2.11.1
-        id: filter
-        with:
-          filters: |
-            api:
-              - 'packages/api/**'
-              - 'package.json'
-              - 'yarn.lock'
-            web:
-              - 'packages/web/**'
-              - 'package.json'
-              - 'yarn.lock'
-            infra:
-              - 'infrastructure/**'
-              - 'packages/**/*/infrastructure'
-            ci:
-              - '.github/workflows/ci.yml'
   test:
-    needs: changes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true'  }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
           cache: "yarn"
-        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true'  }}
 
       - name: Install dependencies
         run: yarn --frozen-lockfile --prefer-offline
-        if: ${{ needs.changes.outputs.web == 'true' || needs.changes.outputs.api == 'true'  }}
 
       - name: Test api
         run: yarn api:test
-        if: ${{ needs.changes.outputs.api == 'true' }}
 
       - name: Test web
         run: yarn web:test
-        if: ${{ needs.changes.outputs.web == 'true' }}
 
-  build:
-    needs: changes
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-          cache: "yarn"
-
-      - name: Install dependencies
-        run: yarn --frozen-lockfile --prefer-offline
-
-      - name: Build web
-        run: yarn web:build
-        shell: bash
-        if: ${{ needs.changes.outputs.web == 'true' }}
-
-      - name: Build api
-        run: yarn api:build
-        if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.infra == 'true' }}
-
-      - name: Cache build
-        uses: actions/cache@v3
-        with:
-          path: packages/**/*/build
-          key: ${{ runner.os }}-build-${{ github.sha }}
-
-  deploy:
+  deploy-prod:
     needs:
-      - changes
       - test
-      - build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: prod
     env:
-      AWS_REGION: ${{ vars.AWS_REGION }}
-      WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
-      WEB_API_KEY: ${{ vars.WEB_API_KEY }}
+      NODE_ENV: ${{ vars.NODE_ENV }}
+      TF_VAR_AWS_REGION: ${{ vars.TF_VAR_AWS_REGION }}
+      TF_VAR_API_KEY: ${{ vars.TF_VAR_API_KEY }}
+      TF_VAR_WEB_BUCKET_NAME: ${{ vars.TF_VAR_WEB_BUCKET_NAME }}
+      REACT_APP_API_URI: ${{ vars.REACT_APP_API_URI }}
+      REACT_APP_API_KEY: ${{ vars.REACT_APP_API_KEY }}
 
     steps:
       - name: Checkout code
@@ -135,42 +66,45 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.4.6
-        if: needs.changes.outputs.infra == 'true'  || needs.changes.outputs.api == 'true'
-
-      - name: Restore cached build
-        uses: actions/cache@v3
-        with:
-          path: packages/**/*/build
-          key: ${{ runner.os }}-build-${{ github.sha }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: arn:aws:iam::272649283154:role/GitHubAction-AssumeRoleWithAction
-          aws-region: eu-west-1
+          aws-region: ${{ vars.TF_VAR_AWS_REGION }}
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile --prefer-offline
+
+      - name: Build web
+        run: yarn web:build
+        shell: bash
+
+      - name: Build api
+        run: yarn api:build
+
+      - name: Zip build
+        run: yarn api:zip
+
+      - name: Sync lambda
+        run: yarn api:s3:sync
 
       - name: Build swagger
-        run: yarn swagger:build
-        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true'
+        run: yarn api:swagger:build
 
       - name: Terraform Init
         run: yarn tf:init
-        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true'
 
       - name: Terraform Validate
         run: yarn tf:validate
-        if: needs.changes.outputs.infra == 'true'|| needs.changes.outputs.api == 'true'
 
       - name: Terraform Plan
         run: yarn tf:plan
         shell: bash
-        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true')
 
       - name: Terraform Apply
         run: yarn tf:apply
         shell: bash
-        if: (needs.changes.outputs.infra == 'true' || needs.changes.outputs.api == 'true')
 
       - name: Deploy Web
-        run: aws s3 sync ./packages/web/build s3://${{ vars.WEB_BUCKET_NAME }} --delete
-        if: needs.changes.outputs.web == 'true'
+        run: yarn web:s3:sync

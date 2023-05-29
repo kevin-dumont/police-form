@@ -28,7 +28,7 @@ export function TravelerFormPage() {
       <Result
         status="success"
         title="Check in complete"
-        subTitle="Thanks for sumbitting"
+        subTitle="Thanks for submitting"
       />
     );
   }

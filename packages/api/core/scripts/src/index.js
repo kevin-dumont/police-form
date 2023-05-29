@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const { build } = require("esbuild");
-const { exec } = require("child_process");
 const config = require("./config");
 
 /**
@@ -20,14 +19,9 @@ function execShellCommand(cmd) {
 }
 
 (async () => {
-  await build(config);
-
-  const dateTime = 197001010000;
-
   console.time("🚀 built in");
 
-  await execShellCommand(
-    `find ./build -exec touch -t ${dateTime} {} + && zip -rX build/handler.zip build/* -x build/*.zip && touch -t ${dateTime} build/handler.zip && shasum build/handler.zip && pwd`
-  );
+  await build(config);
+
   console.timeEnd("🚀 built in");
 })();
