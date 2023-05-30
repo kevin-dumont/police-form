@@ -17,3 +17,14 @@ module "api_gateway" {
   }
 
 }
+
+resource "aws_api_gateway_domain_name" "api_gateway_domain" {
+  certificate_arn = var.certificate_arn
+  domain_name     = var.domain_name
+}
+
+resource "aws_api_gateway_base_path_mapping" "base_path_mapping" {
+  api_id      = module.api_gateway.api_id
+  domain_name = aws_api_gateway_domain_name.api_gateway_domain.domain_name
+  stage_name  = module.api_gateway.stage_name
+}

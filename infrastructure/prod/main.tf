@@ -24,6 +24,9 @@ module "api_gateway" {
   dynamodb_tables = {
     traveler_form_arn = module.dynamodb.tables.traveler_form_arn
   }
+
+  certificate_arn = aws_acm_certificate_validation.cert.certificate_arn
+  domain_name     = "api.bnbcompanion.com"
 }
 
 module "web_s3_bucket" {

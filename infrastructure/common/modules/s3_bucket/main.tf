@@ -1,7 +1,7 @@
 
 # S3 bucket for web
 resource "aws_s3_bucket" "traveler_form_web" {
-  bucket = local.bucket_computed_name
+  bucket = var.bucket_name
 
   tags = {
     Name        = "S3"
@@ -20,7 +20,7 @@ resource "aws_s3_bucket_website_configuration" "traveler_form_web_website_config
 data "aws_iam_policy_document" "s3_policy" {
   statement {
     actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::${local.bucket_computed_name}/*"]
+    resources = ["arn:aws:s3:::${var.bucket_name}/*"]
 
     principals {
       type        = "AWS"

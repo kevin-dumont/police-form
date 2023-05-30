@@ -4,6 +4,6 @@ output "domain_name" {
 }
 
 output "name" {
-  description = "Bucket computed name"
-  value = local.bucket_computed_name
+  description = "Bucket name"
+  value = var.bucket_name
 }
