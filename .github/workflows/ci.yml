@@ -37,18 +37,61 @@ jobs:
       - name: Test web
         run: yarn web:test
 
-  deploy-prod:
+  deploy-front-prod:
     needs:
       - test
     runs-on: ubuntu-latest
     environment: prod
     env:
       NODE_ENV: ${{ vars.NODE_ENV }}
-      TF_VAR_AWS_REGION: ${{ vars.TF_VAR_AWS_REGION }}
-      TF_VAR_API_KEY: ${{ vars.TF_VAR_API_KEY }}
-      TF_VAR_WEB_BUCKET_NAME: ${{ vars.TF_VAR_WEB_BUCKET_NAME }}
-      REACT_APP_API_URI: ${{ vars.REACT_APP_API_URI }}
-      REACT_APP_API_KEY: ${{ vars.REACT_APP_API_KEY }}
+      TF_VAR_AWS_REGION: ${{ vars.AWS_REGION }}
+      TF_VAR_API_KEY: ${{ vars.API_KEY }}
+      TF_VAR_WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
+      REACT_APP_API_URI: ${{ vars.API_URI }}
+      REACT_APP_API_KEY: ${{ vars.API_KEY }}
+      WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          role-to-assume: arn:aws:iam::272649283154:role/GitHubAction-AssumeRoleWithAction
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile --prefer-offline
+
+      - name: Build web
+        run: yarn web:build
+        shell: bash
+
+      - name: Deploy Web
+        run: yarn web:s3:sync
+
+  deploy-backend-prod:
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    environment: prod
+    env:
+      NODE_ENV: ${{ vars.NODE_ENV }}
+      TF_VAR_AWS_REGION: ${{ vars.AWS_REGION }}
+      TF_VAR_API_KEY: ${{ vars.API_KEY }}
+      TF_VAR_WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
+      REACT_APP_API_URI: ${{ vars.API_URI }}
+      REACT_APP_API_KEY: ${{ vars.API_KEY }}
+      WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
 
     steps:
       - name: Checkout code
@@ -71,14 +114,10 @@ jobs:
         uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: arn:aws:iam::272649283154:role/GitHubAction-AssumeRoleWithAction
-          aws-region: ${{ vars.TF_VAR_AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Install dependencies
         run: yarn --frozen-lockfile --prefer-offline
-
-      - name: Build web
-        run: yarn web:build
-        shell: bash
 
       - name: Build api
         run: yarn api:build
@@ -105,6 +144,3 @@ jobs:
       - name: Terraform Apply
         run: yarn tf:apply
         shell: bash
-
-      - name: Deploy Web
-        run: yarn web:s3:sync
