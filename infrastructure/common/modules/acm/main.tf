@@ -1,15 +1,12 @@
-# Zone
-
-resource "aws_route53_zone" "zone" {
-  name = "bnbcompanion.com"
+data "aws_route53_zone" "zone" {
+  name = var.domain_name
+  private_zone = false
 }
 
-
-# For API Gateway - api.bnbcompanion.com
-
 resource "aws_acm_certificate" "cert" {
-  domain_name       = "api.bnbcompanion.com"
-  validation_method = "DNS"
+  domain_name                      = var.domain_name
+  subject_alternative_names = var.alternative_names
+  validation_method                = "DNS"
 
   lifecycle {
     create_before_destroy = true
@@ -19,12 +16,6 @@ resource "aws_acm_certificate" "cert" {
 resource "aws_acm_certificate_validation" "cert" {
   certificate_arn         = aws_acm_certificate.cert.arn
   validation_record_fqdns = [for record in aws_route53_record.cert_validation_records : record.fqdn]
-
-
-
-  depends_on = [
-    aws_route53_record.cert_validation_records
-  ]
 }
 
 resource "aws_route53_record" "cert_validation_records" {
@@ -41,5 +32,5 @@ resource "aws_route53_record" "cert_validation_records" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = aws_route53_zone.zone.zone_id
+  zone_id         = data.aws_route53_zone.zone.zone_id
 }

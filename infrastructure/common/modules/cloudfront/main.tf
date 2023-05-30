@@ -16,7 +16,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
   }
 
-  # aliases = ["bnbcompanion.com"]
+  aliases = [var.domain_name]
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -45,9 +45,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   viewer_certificate {
     cloudfront_default_certificate = true
-    # acm_certificate_arn = aws_acm_certificate.cert.arn
-    # ssl_support_method  = "sni-only"
-    # minimum_protocol_version = "TLSv1.1_2016"
+    acm_certificate_arn = var.acm_certificate_arn
+    ssl_support_method  = "sni-only"
+    minimum_protocol_version = "TLSv1.1_2016"
   }
 
   custom_error_response {
@@ -73,26 +73,3 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 resource "aws_cloudfront_origin_access_identity" "oai" {
   comment = "OAI for Traveler Form Web"
 }
-
-# resource "aws_acm_certificate" "cert" {
-#   domain_name       = "bnbcompanion.com"
-#   validation_method = "DNS"
-# }
-
-# resource "aws_acm_certificate_validation" "cert_validation" {
-#   certificate_arn         = aws_acm_certificate.cert.arn
-#   validation_record_fqdns = aws_route53_record.cert_validation.*.fqdn
-# }
-
-# resource "aws_route53_record" "cert_validation" {
-#   count   = length(aws_acm_certificate.cert.domain_validation_options)
-#   name    = element(aws_acm_certificate.cert.domain_validation_options.*.resource_record_name, count.index)
-#   type    = element(aws_acm_certificate.cert.domain_validation_options.*.resource_record_type, count.index)
-#   zone_id = data.aws_route53_zone.selected.zone_id
-#   records = [element(aws_acm_certificate.cert.domain_validation_options.*.resource_record_value, count.index)]
-#   ttl     = 60
-# }
-
-# data "aws_route53_zone" "selected" {
-#   name = "bnbcompanion.com."
-# }

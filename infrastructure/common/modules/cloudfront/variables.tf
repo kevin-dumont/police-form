@@ -13,3 +13,13 @@ variable "env" {
   description = "Environment"
   type = string 
 }
+
+variable "domain_name" {
+  description = "Domain name"
+  type = string
+}
+
+variable "acm_certificate_arn" {
+  description = "Certificate ARN"
+  type = string
+}
