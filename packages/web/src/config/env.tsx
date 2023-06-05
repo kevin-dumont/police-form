@@ -1,2 +1,2 @@
-export const apiUri = process.env.REACT_APP_API_URI ?? "";
-export const apiKey = process.env.REACT_APP_API_KEY ?? "";
+export const apiUri = import.meta.env.VITE_API_URI ?? "";
+export const apiKey = import.meta.env.VITE_API_KEY ?? "";

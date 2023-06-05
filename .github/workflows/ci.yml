@@ -47,8 +47,8 @@ jobs:
       TF_VAR_AWS_REGION: ${{ vars.AWS_REGION }}
       TF_VAR_API_KEY: ${{ vars.API_KEY }}
       TF_VAR_WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
-      REACT_APP_API_URI: ${{ vars.API_URI }}
-      REACT_APP_API_KEY: ${{ vars.API_KEY }}
+      VITE_API_URI: ${{ vars.API_URI }}
+      VITE_API_KEY: ${{ vars.API_KEY }}
       WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
 
     steps:
@@ -89,8 +89,8 @@ jobs:
       TF_VAR_AWS_REGION: ${{ vars.AWS_REGION }}
       TF_VAR_API_KEY: ${{ vars.API_KEY }}
       TF_VAR_WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
-      REACT_APP_API_URI: ${{ vars.API_URI }}
-      REACT_APP_API_KEY: ${{ vars.API_KEY }}
+      VITE_API_URI: ${{ vars.API_URI }}
+      VITE_API_KEY: ${{ vars.API_KEY }}
       WEB_BUCKET_NAME: ${{ vars.WEB_BUCKET_NAME }}
 
     steps:

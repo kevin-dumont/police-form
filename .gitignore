@@ -3,6 +3,9 @@ packages/**/*/build/
 cache/
 .env
 
+# yarn
+yarn-error.log
+
 # Teraform
 .terraform/
 *.out
