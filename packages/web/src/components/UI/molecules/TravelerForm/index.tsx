@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Button,
@@ -16,42 +17,14 @@ import {
   Box,
   Textarea,
 } from "@chakra-ui/react";
-import { countries } from "countries-list";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { isValidPhoneNumber } from "libphonenumber-js";
-import { useEffect } from "react";
+
 import { CountrySelect } from "../../atoms/CountrySelect";
-
-const schema = z.object({
-  firstName: z.string().nonempty({ message: "First Name is required" }),
-  lastName: z.string().nonempty({ message: "Last Name is required" }),
-  nationality: z.string().nonempty({ message: "Nationality is required" }),
-  dateOfBirth: z.string().nonempty({ message: "Date of Birth is required" }),
-  placeOfBirth: z.string().nonempty({ message: "Place of Birth is required" }),
-  fullHomeAddress: z
-    .string()
-    .nonempty({ message: "Full Home Address is required" }),
-  phone: z.string().refine((value) => isValidPhoneNumber(value), {
-    message: "Phone number must be a valid international phone number",
-  }),
-  email: z.string().email({ message: "Email must be a valid email" }),
-});
-
-export type ITravelerFormInput = {
-  firstName: string;
-  lastName: string;
-  nationality: keyof typeof countries;
-  dateOfBirth: string;
-  placeOfBirth: string;
-  fullHomeAddress: string;
-  phone: string;
-  email: string;
-};
+import { ITravelerShema, travelerSchema } from "../../../../entities/traveler";
 
 type TravelerFormProps = {
-  onFinish: (data: ITravelerFormInput) => void;
-  defaultValues?: ITravelerFormInput;
+  onFinish: (data: ITravelerShema) => void;
+  defaultValues?: ITravelerShema;
   open: boolean;
   onClose: () => void;
 };
@@ -67,8 +40,8 @@ export function TravelerForm({
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<ITravelerFormInput>({
-    resolver: zodResolver(schema),
+  } = useForm<ITravelerShema>({
+    resolver: zodResolver(travelerSchema),
     defaultValues,
   });
 
@@ -78,7 +51,7 @@ export function TravelerForm({
     }
   }, [defaultValues, reset]);
 
-  const onSubmit = (data: ITravelerFormInput) => {
+  const onSubmit = (data: ITravelerShema) => {
     onFinish(data);
     onClose();
     reset();

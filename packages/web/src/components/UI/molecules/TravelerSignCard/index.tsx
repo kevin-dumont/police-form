@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -11,22 +12,24 @@ import {
   ModalCloseButton,
   HStack,
 } from "@chakra-ui/react";
-import SignatureField from "../../atoms/SignatureField";
 import { useSize } from "@chakra-ui/react-use-size";
-import { useRef, useState } from "react";
+
+import SignatureField from "../../atoms/SignatureField";
 import { TravelerCard } from "../../atoms/TravelerCard";
-import { ITravelerFormInput } from "../TravelerForm";
+
+import { ITravelerShema } from "../../../../entities/traveler";
+import { EditIcon } from "@chakra-ui/icons";
 
 export type TravelerSignCardProps = {
   index: number;
+  traveler: ITravelerShema;
   value: string;
-  traveler: ITravelerFormInput;
   onChange: (value: string) => void;
 };
 
 export const TravelerSignCard = ({
-  traveler,
   index,
+  traveler,
   value,
   onChange,
 }: TravelerSignCardProps) => {
@@ -34,18 +37,30 @@ export const TravelerSignCard = ({
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  const [currentValue, setCurrentValue] = useState<string>();
+  const [signature, setSignature] = useState<string>("");
 
   const size = useSize(signContainerRef);
 
-  const handleSave = () => void onChange?.(currentValue as string);
+  const handleSave = () => {
+    onChange?.(signature);
+    onClose();
+  };
 
   return (
     <>
       <TravelerCard traveler={traveler} index={index}>
-        <Button colorScheme="gray" onClick={onOpen}>
-          Sign
-        </Button>
+        {value && <Image src={value} maxHeight={14} />}
+        {!value && (
+          <Button
+            colorScheme="gray"
+            onClick={onOpen}
+            mt={5}
+            size="sm"
+            leftIcon={<EditIcon />}
+          >
+            Sign
+          </Button>
+        )}
       </TravelerCard>
 
       <Modal
@@ -66,14 +81,14 @@ export const TravelerSignCard = ({
               <SignatureField
                 height={250}
                 width={Math.min(size?.height ?? 350, 350)} // handle small screens
-                onChange={setCurrentValue}
+                onChange={setSignature}
               />
 
               <HStack mt={3}>
                 <Button onClick={onClose} mr={2} colorScheme="gray">
                   Cancel
                 </Button>
-                <Button onClick={handleSave} disabled={!currentValue}>
+                <Button onClick={handleSave} disabled={!signature}>
                   Save
                 </Button>
               </HStack>

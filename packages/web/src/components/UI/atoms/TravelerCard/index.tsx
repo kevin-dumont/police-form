@@ -2,12 +2,12 @@ import { PropsWithChildren } from "react";
 import { Box, Flex, HStack, Heading, Tag, Text } from "@chakra-ui/react";
 import { countries } from "countries-list";
 
-import { ITravelerFormInput } from "../../molecules/TravelerForm";
 import { calculateAge } from "../../../../services/numbers/calculateAge";
+import { ITravelerShema } from "../../../../entities/traveler";
 
 export type TravelerCardProps = PropsWithChildren<{
   index: number;
-  traveler: ITravelerFormInput;
+  traveler: ITravelerShema;
 }>;
 
 export const TravelerCard: React.FC<TravelerCardProps> = ({
@@ -29,9 +29,7 @@ export const TravelerCard: React.FC<TravelerCardProps> = ({
             {countries[traveler.nationality].emoji} {traveler.firstName}{" "}
             {traveler.lastName}
           </Text>
-          <Flex justifyContent="flex-end" mt={5}>
-            {children}
-          </Flex>
+          <Flex justifyContent="flex-end">{children}</Flex>
         </Box>
       </Box>
     </>

@@ -1,65 +1,104 @@
-import { useForm } from "react-hook-form";
-
-import { Button, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
-import { ITravelerFormInput } from "../../molecules/TravelerForm";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { calculateAge } from "../../../../services/numbers/calculateAge";
-import { TravelerSignCard } from "../../molecules/TravelerSignCard";
+import {
+  Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  Grid,
+  GridItem,
+  Text,
+} from "@chakra-ui/react";
 
-interface FormData {
-  signatures?: string[];
-}
+import { TravelerSignCard } from "../../molecules/TravelerSignCard";
+import { useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  ISignaturesFormShema,
+  signaturesFormSchema,
+} from "../../../../entities/signatureForm";
+import { ITravelerShema } from "../../../../entities/traveler";
+import { DeepPartial } from "../../../../types/utilities";
 
 export type StepSignProps = {
   onPreviousClick: () => void;
-  onFinish: () => void;
+  onFinish: (data: ISignaturesFormShema) => void;
   disabled?: boolean;
-  travelers?: ITravelerFormInput[];
+  initialValues?: DeepPartial<ISignaturesFormShema>;
+  travelers: ITravelerShema[];
 };
 
 export const StepSign = ({
-  // onFinish,
-  travelers,
+  onFinish,
+  initialValues,
   onPreviousClick,
   disabled,
+  travelers,
 }: StepSignProps) => {
-  const { handleSubmit } = useForm<FormData>();
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<ISignaturesFormShema>({
+    defaultValues: initialValues,
+    resolver: zodResolver(signaturesFormSchema),
+  });
 
-  const onSubmit = () =>
-    // data: FormData
-    {
-      // onFinish(data);
-    };
+  const { fields } = useFieldArray({ control, name: "signatures" });
 
-  const adults = travelers
-    ?.map((traveler, index) => ({ ...traveler, index }))
-    ?.filter(({ dateOfBirth }) => calculateAge(dateOfBirth) >= 18);
+  const onSubmit = (data: ISignaturesFormShema) => {
+    onFinish?.(data);
+  };
+
+  useEffect(() => {
+    reset(initialValues);
+  }, [initialValues]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Text marginTop={10} mb={5} fontStyle="italic">
+      <Text mb={5} fontStyle="italic">
         These travelers have to sign to finish the process
       </Text>
 
       <Grid
+        gap={6}
         templateColumns={{
           base: "1fr",
           md: "repeat(2, 1fr)",
           lg: "repeat(3, 1fr)",
         }}
-        gap={6}
       >
-        {adults?.map(({ index, ...traveler }) => (
-          <GridItem key={index}>
-            <TravelerSignCard
-              index={index}
-              traveler={traveler}
-              value=""
-              onChange={() => null}
+        {fields?.map((item, index) => (
+          <GridItem key={item.id}>
+            <Controller
+              render={({ field }) => (
+                <FormControl
+                  id={`signatures.${index}`}
+                  isInvalid={
+                    !!errors.signatures?.[item.index]?.signature?.message
+                  }
+                >
+                  <TravelerSignCard
+                    traveler={travelers[field.value.index]}
+                    index={field.value.index}
+                    value={field.value.signature}
+                    onChange={(signature) =>
+                      field.onChange({ index, signature })
+                    }
+                  />
+                  <FormErrorMessage>
+                    {errors.signatures?.[item.index]?.signature?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              )}
+              name={`signatures.${index}`}
+              control={control}
             />
           </GridItem>
         ))}
       </Grid>
+
       <Flex justifyContent="space-between">
         <Button
           mt={10}

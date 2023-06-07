@@ -10,13 +10,17 @@ import {
   Stepper,
   useSteps,
 } from "@chakra-ui/react";
+import { useSize } from "@chakra-ui/react-use-size";
 import React, {
   PropsWithChildren,
   ReactElement,
   ReactNode,
+  RefObject,
   createContext,
   useCallback,
   useContext,
+  useEffect,
+  useRef,
 } from "react";
 
 export type Step = {
@@ -34,11 +38,13 @@ export type StepsProps = {
 type StepContextType = {
   activeStep: number;
   isActiveStep: (title: string) => boolean;
+  activeStepRef: RefObject<HTMLDivElement> | null;
 };
 
 const StepContext = createContext<StepContextType>({
   activeStep: 0,
   isActiveStep: () => false,
+  activeStepRef: null,
 });
 
 export const Steps = ({
@@ -47,6 +53,10 @@ export const Steps = ({
   setActiveStep,
   children,
 }: StepsProps) => {
+  const currentStepRef = useRef<HTMLDivElement>(null);
+
+  const currentStepSizes = useSize(currentStepRef);
+
   const getStepIndex = useCallback(
     (title: string) =>
       React.Children.toArray(children).findIndex(
@@ -60,8 +70,20 @@ export const Steps = ({
     [activeStep, getStepIndex]
   );
 
+  useEffect(() => {
+    const initialOverflow = document.body.style.overflowX;
+
+    document.body.style.overflowX = "hidden";
+
+    return () => {
+      document.body.style.overflowX = initialOverflow;
+    };
+  }, []);
+
   return (
-    <StepContext.Provider value={{ activeStep, isActiveStep }}>
+    <StepContext.Provider
+      value={{ activeStep, isActiveStep, activeStepRef: currentStepRef }}
+    >
       <Stepper size="md" index={activeStep}>
         {React.Children.map(children, (step, index) => (
           <Step
@@ -88,12 +110,11 @@ export const Steps = ({
       </Stepper>
 
       <Box
-        // overflowX="hidden"
         position="relative"
-        mt={10}
-        // h={400}
+        mt={16}
         marginLeft={-10}
         marginRight={-10}
+        height={currentStepSizes?.height}
       >
         <Box
           transform={`translateX(-${activeStep * 100}%)`}
@@ -102,6 +123,7 @@ export const Steps = ({
           left={0}
           right={0}
           display="flex"
+          h={currentStepSizes?.height}
         >
           {children}
         </Box>
@@ -115,9 +137,7 @@ export type StepsItemProps = PropsWithChildren<{
 }>;
 
 Steps.Item = ({ title, children }: StepsItemProps) => {
-  const { isActiveStep } = useContext(StepContext);
-
-  console.log("isActiveStep(title)", isActiveStep(title));
+  const { isActiveStep, activeStepRef } = useContext(StepContext);
 
   return (
     <Box minW="full" paddingLeft={10} paddingRight={10} position="relative">
@@ -130,10 +150,12 @@ Steps.Item = ({ title, children }: StepsItemProps) => {
         right={0}
         bottom={0}
       />
+
       <Box
         minW="full"
         opacity={isActiveStep(title) ? "1" : "0"}
         transition="opacity 0.5s ease"
+        ref={isActiveStep(title) ? activeStepRef : undefined}
       >
         {children}
       </Box>

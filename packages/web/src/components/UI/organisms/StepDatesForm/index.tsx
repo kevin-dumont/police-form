@@ -10,41 +10,34 @@ import {
   Button,
   Center,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-const schema = z.object({
-  checkInDate: z.string().nonempty({ message: "Start Date is required" }),
-  checkOutDate: z.string().nonempty({ message: "End Date is required" }),
-});
-
-export type ITravelDatesFormInput = {
-  checkInDate: string;
-  checkOutDate: string;
-};
+import { IDateFormSchema, dateFormSchema } from "../../../../entities/dateForm";
 
 export type StepDatesFormProps = {
-  onFinish: (data: ITravelDatesFormInput) => void;
+  onFinish: (data: IDateFormSchema) => void;
   disabled?: boolean;
+  initialValues: Partial<IDateFormSchema>;
 };
 
-export function StepDatesForm({ onFinish, disabled }: StepDatesFormProps) {
+export function StepDatesForm({
+  onFinish,
+  disabled,
+  initialValues,
+}: StepDatesFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ITravelDatesFormInput>({
-    resolver: zodResolver(schema),
+  } = useForm<IDateFormSchema>({
+    resolver: zodResolver(dateFormSchema),
+    defaultValues: initialValues,
   });
 
-  const onSubmit = (data: ITravelDatesFormInput) => {
-    onFinish(data);
-  };
-
   return (
-    <Box mt={10}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <Box>
+      <form onSubmit={handleSubmit(onFinish)}>
         <Center>
           <VStack spacing="4" maxW={400} w="full">
             <FormControl id="checkInDate" isInvalid={!!errors.checkInDate}>

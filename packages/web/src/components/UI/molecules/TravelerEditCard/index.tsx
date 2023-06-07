@@ -5,14 +5,15 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ITravelerFormInput, TravelerForm } from "../TravelerForm";
+import { TravelerForm } from "../TravelerForm";
 import { TravelerCard } from "../../atoms/TravelerCard";
+import { ITravelerShema } from "../../../../entities/traveler";
 
 export type TravelerCardProps = {
   index: number;
-  traveler: ITravelerFormInput;
+  traveler: ITravelerShema;
   onDelete: () => void;
-  onEditFinished: (data: ITravelerFormInput) => void;
+  onEditFinished: (data: ITravelerShema) => void;
   disabled?: boolean;
 };
 
@@ -33,7 +34,7 @@ export const TravelerEditcard = ({
   return (
     <>
       <TravelerCard traveler={traveler} index={index}>
-        <Tooltip label="Edit" hasArrow isDisabled={disableTooltips}>
+        <Tooltip label="Edit" hasArrow isDisabled={disableTooltips} mt={5}>
           <IconButton
             size="sm"
             onClick={onOpen}
@@ -45,7 +46,7 @@ export const TravelerEditcard = ({
           />
         </Tooltip>
 
-        <Tooltip label="Delete" hasArrow isDisabled={disableTooltips}>
+        <Tooltip label="Delete" hasArrow isDisabled={disableTooltips} mt={5}>
           <IconButton
             ml={2}
             size="sm"

@@ -1,4 +1,3 @@
-import { useCallback, useState } from "react";
 import {
   VStack,
   useDisclosure,
@@ -7,119 +6,142 @@ import {
   Text,
   GridItem,
   Flex,
+  Alert,
+  AlertIcon,
+  AlertTitle,
 } from "@chakra-ui/react";
 import { AddIcon, ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { ITravelerFormInput, TravelerForm } from "../../molecules/TravelerForm";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { TravelerForm } from "../../molecules/TravelerForm";
 import { TravelerEditcard } from "../../molecules/TravelerEditCard";
 
+import {
+  travelerFormSchema,
+  ITavelerFormSchema,
+} from "../../../../entities/travelerForm";
+import { ITravelerShema } from "../../../../entities/traveler";
+
 export type StepTravelersProps = {
-  onChange?: (data: ITravelerFormInput[]) => void;
+  onChange: (data: ITavelerFormSchema) => void;
   disabled?: boolean;
   onPreviousClick: () => void;
+  initialValues: Partial<ITavelerFormSchema>;
 };
 
 export function StepTravelers({
   onChange,
   disabled,
   onPreviousClick,
+  initialValues,
 }: StepTravelersProps) {
-  const [travelers, setTravelers] = useState<ITravelerFormInput[]>([]);
-
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  const handleFinishAdd = (data: ITravelerFormInput) => {
-    const updatedTravelers = [...travelers, data];
+  const { handleSubmit, control, formState } = useForm<ITavelerFormSchema>({
+    resolver: zodResolver(travelerFormSchema),
+    defaultValues: initialValues,
+  });
 
-    setTravelers(updatedTravelers);
+  const { fields, append, remove, update } = useFieldArray({
+    control,
+    name: "travelers",
+  });
+
+  const handleFinishAdd = (data: ITravelerShema) => {
+    append(data);
+    onClose();
   };
-
-  const handleFinishEdit = (index: number, data: ITravelerFormInput) => {
-    setTravelers((oldTraveler) =>
-      oldTraveler.map((traveler, i) => (i === index ? data : traveler))
-    );
-  };
-
-  const handleDelete = (index: number) => {
-    setTravelers((oldTraveler) => oldTraveler.filter((_, i) => i !== index));
-  };
-
-  const handleNextClick = useCallback(() => {
-    onChange?.(travelers);
-  }, [travelers]);
 
   return (
     <>
-      <Text marginTop={10} mb={5} fontStyle="italic">
-        Thank you to register all travelers, children included.
-      </Text>
+      <form onSubmit={handleSubmit(onChange)}>
+        <Text mb={5} fontStyle="italic">
+          Thank you to register all travelers, children included.
+        </Text>
 
-      <Grid
-        templateColumns={{
-          base: "1fr",
-          md: "repeat(2, 1fr)",
-          lg: "repeat(3, 1fr)",
-        }}
-        gap={6}
-      >
-        {travelers.map((traveler, index) => (
+        {formState.errors.travelers?.message && (
+          <Alert status="error" mb={3}>
+            <AlertIcon />
+            <AlertTitle>{formState.errors.travelers?.message}</AlertTitle>
+          </Alert>
+        )}
+
+        <Grid
+          templateColumns={{
+            base: "1fr",
+            md: "repeat(2, 1fr)",
+            lg: "repeat(3, 1fr)",
+          }}
+          gap={6}
+        >
+          {fields.map((field, index) => (
+            <GridItem key={field.id}>
+              <Controller
+                control={control}
+                name={`travelers.${index}`}
+                defaultValue={field}
+                render={({ field }) => (
+                  <TravelerEditcard
+                    key={index}
+                    index={index}
+                    traveler={field.value}
+                    onEditFinished={(data) => update(index, data)}
+                    onDelete={() => remove(index)}
+                    disabled={disabled}
+                  />
+                )}
+              />
+            </GridItem>
+          ))}
+
           <GridItem>
-            <TravelerEditcard
-              key={index}
-              index={index}
-              traveler={traveler}
-              onEditFinished={(data) => handleFinishEdit(index, data)}
-              onDelete={() => handleDelete(index)}
+            <Button
               disabled={disabled}
-            />
+              tabIndex={disabled ? -1 : 0}
+              onClick={onOpen}
+              height={150}
+              fontSize={22}
+              w="full"
+              colorScheme="gray"
+            >
+              <VStack>
+                <AddIcon />
+                <Text>Add traveler</Text>
+              </VStack>
+            </Button>
           </GridItem>
-        ))}
+        </Grid>
 
-        <GridItem>
+        <TravelerForm
+          open={isOpen}
+          onClose={onClose}
+          onFinish={handleFinishAdd}
+        />
+
+        <Flex justifyContent="space-between">
           <Button
+            mt={10}
+            onClick={onPreviousClick}
             disabled={disabled}
             tabIndex={disabled ? -1 : 0}
-            onClick={onOpen}
-            height={150}
-            fontSize={22}
-            w="full"
             colorScheme="gray"
+            leftIcon={<ArrowBackIcon />}
           >
-            <VStack>
-              <AddIcon />
-              <Text>Add traveler</Text>
-            </VStack>
+            Previous step
           </Button>
-        </GridItem>
-      </Grid>
 
-      <TravelerForm
-        open={isOpen}
-        onClose={onClose}
-        onFinish={handleFinishAdd}
-      />
-
-      <Flex justifyContent="space-between">
-        <Button
-          mt={10}
-          onClick={onPreviousClick}
-          disabled={disabled}
-          tabIndex={disabled ? -1 : 0}
-          colorScheme="gray"
-          leftIcon={<ArrowBackIcon />}
-        >
-          Previous step
-        </Button>
-
-        <Button
-          mt={10}
-          onClick={handleNextClick}
-          disabled={disabled}
-          tabIndex={disabled ? -1 : 0}
-          rightIcon={<ArrowForwardIcon />}
-        >
-          Next step
-        </Button>
-      </Flex>
+          <Button
+            mt={10}
+            type="submit"
+            disabled={disabled}
+            tabIndex={disabled ? -1 : 0}
+            rightIcon={<ArrowForwardIcon />}
+          >
+            Next step
+          </Button>
+        </Flex>
+      </form>
     </>
   );
 }
