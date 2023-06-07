@@ -25,7 +25,7 @@ module "api_gateway" {
     traveler_form_arn = module.dynamodb.tables.traveler_form_arn
   }
 
-  certificate_arn = module.acm.certificate_arn
+  certificate_arn = "arn:aws:acm:us-east-1:272649283154:certificate/1ccce314-9bb8-419b-a52c-98507fac8030"
   domain_name     = "api.bnbcompanion.com"
 }
 
@@ -43,13 +43,6 @@ module "web_cloudfront" {
   env                 = var.env
   bucket_name         = module.web_s3_bucket.name
   bucket_domain_name  = module.web_s3_bucket.domain_name
-  acm_certificate_arn = module.acm.certificate_arn
+  acm_certificate_arn = "arn:aws:acm:us-east-1:272649283154:certificate/1ccce314-9bb8-419b-a52c-98507fac8030"
   domain_name         = "bnbcompanion.com"
-}
-
-module "acm" {
-  source = "../common/modules/acm"
-
-  domain_name       = "bnbcompanion.com"
-  alternative_names = ["*.bnbcompanion.com"]
 }
