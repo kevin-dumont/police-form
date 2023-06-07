@@ -1,7 +1,3 @@
-resource "aws_route53_zone" "zone" {
-  name         = var.domain_name
-}
-
 resource "aws_acm_certificate" "cert" {
   domain_name                      = var.domain_name
   subject_alternative_names = var.alternative_names
@@ -31,5 +27,5 @@ resource "aws_route53_record" "cert_validation_records" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = aws_route53_zone.zone.zone_id
+  zone_id         = "Z00340123PWUZF6IIKM9C"
 }
