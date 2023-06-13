@@ -93,9 +93,7 @@ export function TravelerForm({
                 <FormControl id="nationality" isInvalid={!!errors.nationality}>
                   <FormLabel>Nationality</FormLabel>
                   <CountrySelect {...register("nationality")} />
-                  <FormErrorMessage>
-                    {errors.nationality?.message}
-                  </FormErrorMessage>
+                  <FormErrorMessage>Nationality is required</FormErrorMessage>
                 </FormControl>
 
                 <FormControl id="dateOfBirth" isInvalid={!!errors.dateOfBirth}>

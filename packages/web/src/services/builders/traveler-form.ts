@@ -1,33 +1,49 @@
 import type { TravelerFormInput as ApiTravelerForm } from "@sygmaa/entities";
-import type { TravelerForm as WebTravelerForm } from "../../components/UI/TravelerForm/types";
-import dayjs from "dayjs";
+import { IFormSchema } from "../../entities/form";
+import { ITravelerShema } from "../../entities/traveler";
 
 export const buildTravelerFormOutput = ({
-  checkInDate,
-  checkOutDate,
   travelers,
-}: WebTravelerForm): ApiTravelerForm => {
+  ...payload
+}: IFormSchema): ApiTravelerForm => {
   return {
-    checkInDate: checkInDate.startOf("day").toISOString(),
-    checkOutDate: checkOutDate.startOf("day").toISOString(),
-    travelers: travelers.map(({ dateOfBirth, ...restTraveler }) => ({
-      ...restTraveler,
-      dateOfBirth: dateOfBirth.startOf("day").toISOString(),
-    })),
+    ...payload,
+    travelers: travelers.map(
+      ({
+        fullHomeAddress,
+        dateOfBirth,
+        email,
+        firstName,
+        lastName,
+        nationality,
+        phone,
+        placeOfBirth,
+        signature,
+      }) => ({
+        firstName,
+        lastName,
+        nationality: nationality as string,
+        address: fullHomeAddress,
+        dateOfBirth,
+        email,
+        phone,
+        placeOfBirth,
+        signature,
+      })
+    ),
   };
 };
 
 export const buildTravelerFormInput = ({
-  checkInDate,
-  checkOutDate,
   travelers,
-}: ApiTravelerForm): WebTravelerForm => {
+  ...payload
+}: ApiTravelerForm): IFormSchema => {
   return {
-    checkInDate: dayjs(checkInDate),
-    checkOutDate: dayjs(checkOutDate),
-    travelers: travelers.map(({ dateOfBirth, ...restTraveler }) => ({
+    ...payload,
+    travelers: travelers.map(({ nationality, address, ...restTraveler }) => ({
       ...restTraveler,
-      dateOfBirth: dayjs(dateOfBirth),
+      fullHomeAddress: address,
+      nationality: nationality as ITravelerShema["nationality"],
     })),
   };
 };

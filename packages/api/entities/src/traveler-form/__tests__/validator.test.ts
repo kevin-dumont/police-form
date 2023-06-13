@@ -8,8 +8,8 @@ describe("validateTravelerForm", () => {
       checkOutDate: "2023-05-08T22:00:00.000Z",
       travelers: [
         {
-          firstname: "Kévin",
-          lastname: "DUMONT",
+          firstName: "Kévin",
+          lastName: "DUMONT",
           address: "55 avenue de Juvisyy",
           phone: "0762064374",
           email: "k.dumont1994@gmail.com",
@@ -31,8 +31,8 @@ describe("validateTravelerForm", () => {
             address: "55 avenue de Juvisyy",
             dateOfBirth: "1992-02-03T23:00:00.000Z",
             email: "k.dumont1994@gmail.com",
-            firstname: "Kévin",
-            lastname: "DUMONT",
+            firstName: "Kévin",
+            lastName: "DUMONT",
             nationality: "AQ",
             phone: "0762064374",
             placeOfBirth: "dsqdqsd",

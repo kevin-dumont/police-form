@@ -4,11 +4,12 @@ import {
   Center,
   HStack,
   Heading,
+  Spinner,
   Text,
   useBoolean,
   useSteps,
 } from "@chakra-ui/react";
-import { CheckCircleIcon } from "@chakra-ui/icons";
+import { CheckCircleIcon, WarningIcon } from "@chakra-ui/icons";
 import { useMemo, useState } from "react";
 
 import {
@@ -24,6 +25,8 @@ import { StepSign, StepSignProps } from "../../UI/organisms/StepSign";
 import { IFormSchema } from "../../../entities/form";
 import { calculateAge } from "../../../services/numbers/calculateAge";
 import { ITravelerShema } from "../../../entities/traveler";
+import { buildTravelerFormOutput } from "../../../services/builders/traveler-form";
+import { createTravelerForm } from "../../../services/http-requests/traveler-form/create";
 
 const travelerToSignature = (traveler: ITravelerShema, index: number) => ({
   traveler,
@@ -32,13 +35,15 @@ const travelerToSignature = (traveler: ITravelerShema, index: number) => ({
 });
 
 const isAdult = ({ traveler }: { traveler: ITravelerShema }) =>
-  calculateAge(traveler.dateOfBirth) <= 18;
+  calculateAge(traveler.dateOfBirth) >= 18;
 
 export type IFormInput = Partial<IFormSchema>;
 
 export function TravelerFormPage() {
   const [hasBegin, setHasBegin] = useBoolean();
   const [hasFinished, setHasFinished] = useBoolean();
+  const [hasError, setHasError] = useBoolean();
+  const [isSending, setIsSending] = useBoolean();
 
   const { activeStep, setActiveStep, isCompleteStep, goToNext, goToPrevious } =
     useSteps({
@@ -59,14 +64,22 @@ export function TravelerFormPage() {
   };
 
   const onSignFinished: StepSignProps["onFinish"] = ({ signatures }) => {
-    setFormState((oldState) => ({
-      ...oldState,
-      travelers: oldState.travelers?.map((traveler, index) => ({
+    const formInput = {
+      ...formState,
+      travelers: formState.travelers?.map((traveler, index) => ({
         ...traveler,
         signature: signatures.find((sign) => sign.index === index)?.signature,
       })),
-    }));
-    setHasFinished.on();
+    } as IFormSchema;
+
+    setFormState(formInput);
+
+    setIsSending.on();
+
+    createTravelerForm(buildTravelerFormOutput(formInput))
+      .then(setHasFinished.on)
+      .catch(setHasError.on)
+      .finally(setIsSending.off);
   };
 
   const initialDatesValues = useMemo(
@@ -105,6 +118,29 @@ export function TravelerFormPage() {
           <Text fontWeight="semibold" fontSize="2xl">
             Thanks for your submitting!
           </Text>
+        </HStack>
+      </Center>
+    );
+  }
+
+  if (hasError) {
+    return (
+      <Center h="100vh">
+        <HStack>
+          <WarningIcon color="red.500" fontSize="2xl" />
+          <Text fontWeight="semibold" fontSize="2xl">
+            Thanks for your submitting!
+          </Text>
+        </HStack>
+      </Center>
+    );
+  }
+
+  if (isSending) {
+    return (
+      <Center h="100vh">
+        <HStack>
+          <Spinner size="xl" />
         </HStack>
       </Center>
     );

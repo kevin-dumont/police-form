@@ -24,8 +24,8 @@ export class TravelerFormObject {
         memberType: {
           type: "Document",
           members: {
-            firstname: { type: "String" },
-            lastname: { type: "String" },
+            firstName: { type: "String" },
+            lastName: { type: "String" },
             address: { type: "String" },
             phone: { type: "String" },
             email: { type: "String" },

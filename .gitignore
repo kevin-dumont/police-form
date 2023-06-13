@@ -5,6 +5,7 @@ cache/
 
 # yarn
 yarn-error.log
+dist/
 
 # Teraform
 .terraform/
