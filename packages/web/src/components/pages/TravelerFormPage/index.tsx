@@ -129,7 +129,7 @@ export function TravelerFormPage() {
         <HStack>
           <WarningIcon color="red.500" fontSize="2xl" />
           <Text fontWeight="semibold" fontSize="2xl">
-            Thanks for your submitting!
+            An error occured, please retry later
           </Text>
         </HStack>
       </Center>

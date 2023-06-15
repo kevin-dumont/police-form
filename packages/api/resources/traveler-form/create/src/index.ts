@@ -6,6 +6,7 @@ import { saveTravelerForm } from "@sygmaa/services";
 
 export const handler: Handler<{ body: TravelerFormInput }> = async (event) => {
   AppLogger.info("Starting traveler-form-create", event);
+  AppLogger.debug(event);
 
   const result = validateTravelerForm(event.body);
 
