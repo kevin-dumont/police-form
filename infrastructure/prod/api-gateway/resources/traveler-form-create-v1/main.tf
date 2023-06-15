@@ -8,7 +8,7 @@ module "traveler_form_create_lambda_v1" {
 }
 
 resource "aws_lambda_permission" "permission" {
-  statement_id  = "AllowExecutionFromAPIGateway"
+  statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = module.traveler_form_create_lambda_v1.function_name
   principal     = "apigateway.amazonaws.com"
