@@ -25,8 +25,8 @@ module "api_gateway" {
     traveler_form_arn = module.dynamodb.tables.traveler_form_arn
   }
 
-  certificate_arn = "arn:aws:acm:us-east-1:272649283154:certificate/1ccce314-9bb8-419b-a52c-98507fac8030"
-  domain_name     = "api.bnbcompanion.com"
+  certificate_arn = var.domain_certificate_arn
+  domain_name     = var.api_domain
 }
 
 module "web_s3_bucket" {
@@ -43,6 +43,30 @@ module "web_cloudfront" {
   env                 = var.env
   bucket_name         = module.web_s3_bucket.name
   bucket_domain_name  = module.web_s3_bucket.domain_name
-  acm_certificate_arn = "arn:aws:acm:us-east-1:272649283154:certificate/1ccce314-9bb8-419b-a52c-98507fac8030"
-  domain_name         = "bnbcompanion.com"
+  acm_certificate_arn = var.domain_certificate_arn
+  domain_name         = var.cloudfront_domain
+}
+
+resource "aws_route53_record" "front" {
+  zone_id = var.route53_zone_id
+  name    = var.cloudfront_domain
+  type    = "A"
+
+  alias {
+    name                   = module.web_cloudfront.domain_name
+    zone_id                = module.web_cloudfront.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "api" {
+  zone_id = var.route53_zone_id
+  name    = var.api_domain
+  type    = "A"
+
+  alias {
+    name                   = module.api_gateway.domain_name
+    zone_id                = module.api_gateway.hosted_zone_id
+    evaluate_target_health = false
+  }
 }

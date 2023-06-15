@@ -18,3 +18,23 @@ variable "env" {
   default = "prod"
   type = string
 }
+
+variable "api_domain" {
+  description = "Api domain name"
+  type = string
+}
+
+variable "cloudfront_domain" {
+  description = "Cloudfront domain name"
+  type = string
+}
+
+variable "domain_certificate_arn" {
+  description = "Certificate arn"
+  type = string
+}
+
+variable "route53_zone_id" {
+  description = "Zone id"
+  type = string
+}
