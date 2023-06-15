@@ -12,7 +12,7 @@ module "api_gateway" {
   swagger_template = local.template.swagger
 
   config = {
-    aws_region = data.aws_region.current.name
+    aws_region  = data.aws_region.current.name
     aws_account = data.aws_caller_identity.current.account_id
   }
 

@@ -6,6 +6,12 @@ find ./packages/api -name build -type d | while read dir; do
   pkg_name=${pkg_name/@/}
   pkg_name=${pkg_name/\//-}
 
+  # Check if the package name is not empty
+  if [ -z "$pkg_name" ]; then
+    echo "Package name is empty for directory $parent_dir, skipping."
+    continue
+  fi
+
   echo $pkg_name
 
   zip -r "infrastructure/$NODE_ENV/build/$pkg_name.zip" "$dir"

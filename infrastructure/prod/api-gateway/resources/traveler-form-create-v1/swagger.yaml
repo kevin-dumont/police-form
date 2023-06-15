@@ -19,7 +19,7 @@ paths:
               type: string
       x-amazon-apigateway-integration:
         type: aws
-        uri: arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${aws_account}:function:traveler_form_create/invocations
+        uri: arn:aws:apigateway:${aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${aws_region}:${aws_account}:function:${env}-traveler_form_create/invocations
         httpMethod: POST
         responses:
           default:
