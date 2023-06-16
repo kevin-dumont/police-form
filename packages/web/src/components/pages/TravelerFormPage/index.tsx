@@ -111,25 +111,25 @@ export function TravelerFormPage() {
   );
 
   if (hasFinished) {
+    if (hasError) {
+      return (
+        <Center h="100vh">
+          <HStack>
+            <WarningIcon color="red.500" fontSize="2xl" />
+            <Text fontWeight="semibold" fontSize="2xl">
+              An error occured, please retry later
+            </Text>
+          </HStack>
+        </Center>
+      );
+    }
+
     return (
       <Center h="100vh">
         <HStack>
           <CheckCircleIcon color="green.500" fontSize="2xl" />
           <Text fontWeight="semibold" fontSize="2xl">
             Thanks for your submitting!
-          </Text>
-        </HStack>
-      </Center>
-    );
-  }
-
-  if (hasError) {
-    return (
-      <Center h="100vh">
-        <HStack>
-          <WarningIcon color="red.500" fontSize="2xl" />
-          <Text fontWeight="semibold" fontSize="2xl">
-            An error occured, please retry later
           </Text>
         </HStack>
       </Center>

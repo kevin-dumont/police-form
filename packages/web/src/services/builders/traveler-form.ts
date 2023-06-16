@@ -1,13 +1,17 @@
 import type { TravelerFormInput as ApiTravelerForm } from "@sygmaa/entities";
 import { IFormSchema } from "../../entities/form";
 import { ITravelerShema } from "../../entities/traveler";
+import { dayToIso } from "../dates/day-to-iso";
+import { isoToDay } from "../dates/iso-to-day";
 
 export const buildTravelerFormOutput = ({
   travelers,
-  ...payload
+  checkInDate,
+  checkOutDate,
 }: IFormSchema): ApiTravelerForm => {
   return {
-    ...payload,
+    checkInDate: dayToIso(checkInDate),
+    checkOutDate: dayToIso(checkOutDate),
     travelers: travelers.map(
       ({
         fullHomeAddress,
@@ -24,7 +28,7 @@ export const buildTravelerFormOutput = ({
         lastName,
         nationality: nationality as string,
         address: fullHomeAddress,
-        dateOfBirth,
+        dateOfBirth: dayToIso(dateOfBirth),
         email,
         phone,
         placeOfBirth,
@@ -36,14 +40,19 @@ export const buildTravelerFormOutput = ({
 
 export const buildTravelerFormInput = ({
   travelers,
-  ...payload
+  checkInDate,
+  checkOutDate,
 }: ApiTravelerForm): IFormSchema => {
   return {
-    ...payload,
-    travelers: travelers.map(({ nationality, address, ...restTraveler }) => ({
-      ...restTraveler,
-      fullHomeAddress: address,
-      nationality: nationality as ITravelerShema["nationality"],
-    })),
+    checkInDate: isoToDay(checkInDate),
+    checkOutDate: isoToDay(checkOutDate),
+    travelers: travelers.map(
+      ({ nationality, address, dateOfBirth, ...restTraveler }) => ({
+        ...restTraveler,
+        fullHomeAddress: address,
+        nationality: nationality as ITravelerShema["nationality"],
+        dateOfBirth: isoToDay(dateOfBirth),
+      })
+    ),
   };
 };
