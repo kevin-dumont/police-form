@@ -1,11 +1,11 @@
 node_modules/
-packages/**/*/build/
 cache/
 .env
 
 # yarn
 yarn-error.log
 dist/
+build/
 
 # Teraform
 .terraform/
