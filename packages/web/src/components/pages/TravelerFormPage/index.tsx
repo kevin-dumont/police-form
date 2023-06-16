@@ -1,33 +1,16 @@
-import {
-  Box,
-  Button,
-  Center,
-  HStack,
-  Heading,
-  Spinner,
-  Text,
-  useBoolean,
-  useSteps,
-} from "@chakra-ui/react";
-import { CheckCircleIcon } from "@chakra-ui/icons";
-import { useMemo, useState } from "react";
-import { useToast } from "@chakra-ui/react";
+import { Box, Button, Center, HStack, Heading, Spinner, Text, useBoolean, useSteps, useToast } from '@chakra-ui/react';
+import { CheckCircleIcon } from '@chakra-ui/icons';
+import { useMemo, useState } from 'react';
 
-import {
-  StepDatesForm,
-  StepDatesFormProps,
-} from "../../UI/organisms/StepDatesForm";
-import {
-  StepTravelers,
-  StepTravelersProps,
-} from "../../UI/organisms/StepTravelers";
-import { Steps } from "../../UI/organisms/Steps";
-import { StepSign, StepSignProps } from "../../UI/organisms/StepSign";
-import { IFormSchema } from "../../../entities/form";
-import { calculateAge } from "../../../services/numbers/calculateAge";
-import { ITravelerShema } from "../../../entities/traveler";
-import { buildTravelerFormOutput } from "../../../services/builders/traveler-form";
-import { createTravelerForm } from "../../../services/http-requests/traveler-form/create";
+import { StepDatesForm, StepDatesFormProps } from '../../UI/organisms/StepDatesForm';
+import { StepTravelers, StepTravelersProps } from '../../UI/organisms/StepTravelers';
+import { Steps } from '../../UI/organisms/Steps';
+import { StepSign, StepSignProps } from '../../UI/organisms/StepSign';
+import { IFormSchema } from '../../../entities/form';
+import { calculateAge } from '../../../services/numbers/calculateAge';
+import { ITravelerShema } from '../../../entities/traveler';
+import { buildTravelerFormOutput } from '../../../services/builders/traveler-form';
+import { createTravelerForm } from '../../../services/http-requests/traveler-form/create';
 
 const travelerToSignature = (traveler: ITravelerShema, index: number) => ({
   traveler,
@@ -35,8 +18,7 @@ const travelerToSignature = (traveler: ITravelerShema, index: number) => ({
   signature: traveler.signature,
 });
 
-const isAdult = ({ traveler }: { traveler: ITravelerShema }) =>
-  calculateAge(traveler.dateOfBirth) >= 18;
+const isAdult = ({ traveler }: { traveler: ITravelerShema }) => calculateAge(traveler.dateOfBirth) >= 18;
 
 export type IFormInput = Partial<IFormSchema>;
 
@@ -46,25 +28,24 @@ export function TravelerFormPage() {
   const [isSending, setIsSending] = useBoolean();
   const toast = useToast();
 
-  const { activeStep, setActiveStep, isCompleteStep, goToNext, goToPrevious } =
-    useSteps({
-      index: 0,
-      count: 3,
-    });
+  const { activeStep, setActiveStep, isCompleteStep, goToNext, goToPrevious } = useSteps({
+    index: 0,
+    count: 3,
+  });
 
   const [formState, setFormState] = useState<IFormInput>({});
 
-  const onDateChange: StepDatesFormProps["onFinish"] = (dates) => {
+  const onDateChange: StepDatesFormProps['onFinish'] = (dates) => {
     setFormState((state) => ({ ...state, ...dates }));
     goToNext();
   };
 
-  const onTravelersChange: StepTravelersProps["onChange"] = (travelerForm) => {
+  const onTravelersChange: StepTravelersProps['onChange'] = (travelerForm) => {
     setFormState((state) => ({ ...state, ...travelerForm }));
     goToNext();
   };
 
-  const onSignFinished: StepSignProps["onFinish"] = ({ signatures }) => {
+  const onSignFinished: StepSignProps['onFinish'] = ({ signatures }) => {
     const formInput = {
       ...formState,
       travelers: formState.travelers?.map((traveler, index) => ({
@@ -81,12 +62,12 @@ export function TravelerFormPage() {
       .then(setIsSuccess.on)
       .catch(() =>
         toast({
-          title: "Error",
-          description: "An error occured, please retry later",
-          status: "error",
+          title: 'Error',
+          description: 'An error occured, please retry later',
+          status: 'error',
           duration: 9000,
           isClosable: true,
-        })
+        }),
       )
       .finally(setIsSending.off);
   };
@@ -96,14 +77,14 @@ export function TravelerFormPage() {
       checkInDate: formState.checkInDate,
       checkOutDate: formState.checkOutDate,
     }),
-    [formState.checkInDate, formState.checkOutDate]
+    [formState.checkInDate, formState.checkOutDate],
   );
 
   const initialTravelersValues = useMemo(
     () => ({
       travelers: formState.travelers,
     }),
-    [formState.travelers]
+    [formState.travelers],
   );
 
   const initialSignatureValues = useMemo(
@@ -116,7 +97,7 @@ export function TravelerFormPage() {
           signature,
         })),
     }),
-    [formState.travelers]
+    [formState.travelers],
   );
 
   if (isSuccess) {
@@ -152,10 +133,9 @@ export function TravelerFormPage() {
             <Text>Dear guest,</Text>
 
             <Text mt={5}>
-              We kindly ask you to fill out a quick registration form, which is
-              required by French law (Article R. 611-42).
-              <br /> Your cooperation helps us ensure a smooth stay for
-              everyone.
+              We kindly ask you to fill out a quick registration form, which is required by French law (Article R.
+              611-42).
+              <br /> Your cooperation helps us ensure a smooth stay for everyone.
             </Text>
 
             <Text mt={5}>Thank you very much!</Text>
@@ -168,17 +148,9 @@ export function TravelerFormPage() {
       </Box>
 
       {hasBegin && !isSuccess && (
-        <Steps
-          activeStep={activeStep}
-          isCompleteStep={isCompleteStep}
-          setActiveStep={setActiveStep}
-        >
+        <Steps activeStep={activeStep} isCompleteStep={isCompleteStep} setActiveStep={setActiveStep}>
           <Steps.Item title="Dates">
-            <StepDatesForm
-              initialValues={initialDatesValues}
-              onFinish={onDateChange}
-              disabled={activeStep !== 0}
-            />
+            <StepDatesForm initialValues={initialDatesValues} onFinish={onDateChange} disabled={activeStep !== 0} />
           </Steps.Item>
 
           <Steps.Item title="Travelers">

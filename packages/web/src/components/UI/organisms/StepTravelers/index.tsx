@@ -9,19 +9,16 @@ import {
   Alert,
   AlertIcon,
   AlertTitle,
-} from "@chakra-ui/react";
-import { AddIcon, ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '@chakra-ui/react';
+import { AddIcon, ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { TravelerForm } from "../../molecules/TravelerForm";
-import { TravelerEditcard } from "../../molecules/TravelerEditCard";
+import { TravelerForm } from '../../molecules/TravelerForm';
+import { TravelerEditcard } from '../../molecules/TravelerEditCard';
 
-import {
-  travelerFormSchema,
-  ITavelerFormSchema,
-} from "../../../../entities/travelerForm";
-import { ITravelerShema } from "../../../../entities/traveler";
+import { travelerFormSchema, ITavelerFormSchema } from '../../../../entities/travelerForm';
+import { ITravelerShema } from '../../../../entities/traveler';
 
 export type StepTravelersProps = {
   onChange: (data: ITavelerFormSchema) => void;
@@ -30,12 +27,7 @@ export type StepTravelersProps = {
   initialValues: Partial<ITavelerFormSchema>;
 };
 
-export function StepTravelers({
-  onChange,
-  disabled,
-  onPreviousClick,
-  initialValues,
-}: StepTravelersProps) {
+export function StepTravelers({ onChange, disabled, onPreviousClick, initialValues }: StepTravelersProps) {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   const { handleSubmit, control, formState } = useForm<ITavelerFormSchema>({
@@ -45,7 +37,7 @@ export function StepTravelers({
 
   const { fields, append, remove, update } = useFieldArray({
     control,
-    name: "travelers",
+    name: 'travelers',
   });
 
   const handleFinishAdd = (data: ITravelerShema) => {
@@ -69,9 +61,9 @@ export function StepTravelers({
 
         <Grid
           templateColumns={{
-            base: "1fr",
-            md: "repeat(2, 1fr)",
-            lg: "repeat(3, 1fr)",
+            base: '1fr',
+            md: 'repeat(2, 1fr)',
+            lg: 'repeat(3, 1fr)',
           }}
           gap={6}
         >
@@ -113,11 +105,7 @@ export function StepTravelers({
           </GridItem>
         </Grid>
 
-        <TravelerForm
-          open={isOpen}
-          onClose={onClose}
-          onFinish={handleFinishAdd}
-        />
+        <TravelerForm open={isOpen} onClose={onClose} onFinish={handleFinishAdd} />
 
         <Flex justifyContent="space-between">
           <Button

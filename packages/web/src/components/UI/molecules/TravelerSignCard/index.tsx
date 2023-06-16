@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -11,14 +11,14 @@ import {
   ModalBody,
   ModalCloseButton,
   HStack,
-} from "@chakra-ui/react";
-import { useSize } from "@chakra-ui/react-use-size";
+} from '@chakra-ui/react';
+import { useSize } from '@chakra-ui/react-use-size';
 
-import SignatureField from "../../atoms/SignatureField";
-import { TravelerCard } from "../../atoms/TravelerCard";
+import SignatureField from '../../atoms/SignatureField';
+import { TravelerCard } from '../../atoms/TravelerCard';
 
-import { ITravelerShema } from "../../../../entities/traveler";
-import { EditIcon } from "@chakra-ui/icons";
+import { ITravelerShema } from '../../../../entities/traveler';
+import { EditIcon } from '@chakra-ui/icons';
 
 export type TravelerSignCardProps = {
   index: number;
@@ -27,17 +27,12 @@ export type TravelerSignCardProps = {
   onChange: (value: string) => void;
 };
 
-export const TravelerSignCard = ({
-  index,
-  traveler,
-  value,
-  onChange,
-}: TravelerSignCardProps) => {
+export const TravelerSignCard = ({ index, traveler, value, onChange }: TravelerSignCardProps) => {
   const signContainerRef = useRef<HTMLDivElement>(null);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  const [signature, setSignature] = useState<string>("");
+  const [signature, setSignature] = useState<string>('');
 
   const size = useSize(signContainerRef);
 
@@ -51,26 +46,15 @@ export const TravelerSignCard = ({
       <TravelerCard traveler={traveler} index={index}>
         {value && <Image src={value} maxHeight={14} />}
         {!value && (
-          <Button
-            colorScheme="gray"
-            onClick={onOpen}
-            mt={5}
-            size="sm"
-            leftIcon={<EditIcon />}
-          >
+          <Button colorScheme="gray" onClick={onOpen} mt={5} size="sm" leftIcon={<EditIcon />}>
             Sign
           </Button>
         )}
       </TravelerCard>
 
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        size="full"
-        motionPreset="slideInBottom"
-      >
+      <Modal isOpen={isOpen} onClose={onClose} size="full" motionPreset="slideInBottom">
         <ModalOverlay />
-        <ModalContent display="flex" alignItems="center" animation={"unset"}>
+        <ModalContent display="flex" alignItems="center" animation={'unset'}>
           <ModalCloseButton />
           <ModalBody>
             <Box ref={signContainerRef}>

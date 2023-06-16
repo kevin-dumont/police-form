@@ -1,13 +1,8 @@
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import {
-  IconButton,
-  Tooltip,
-  useBreakpointValue,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { TravelerForm } from "../TravelerForm";
-import { TravelerCard } from "../../atoms/TravelerCard";
-import { ITravelerShema } from "../../../../entities/traveler";
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { IconButton, Tooltip, useBreakpointValue, useDisclosure } from '@chakra-ui/react';
+import { TravelerForm } from '../TravelerForm';
+import { TravelerCard } from '../../atoms/TravelerCard';
+import { ITravelerShema } from '../../../../entities/traveler';
 
 export type TravelerCardProps = {
   index: number;
@@ -17,19 +12,10 @@ export type TravelerCardProps = {
   disabled?: boolean;
 };
 
-export const TravelerEditcard = ({
-  index,
-  onDelete,
-  onEditFinished,
-  traveler,
-  disabled,
-}: TravelerCardProps) => {
+export const TravelerEditcard = ({ index, onDelete, onEditFinished, traveler, disabled }: TravelerCardProps) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  const disableTooltips = useBreakpointValue(
-    { base: false, xs: true },
-    { ssr: false }
-  );
+  const disableTooltips = useBreakpointValue({ base: false, xs: true }, { ssr: false });
 
   return (
     <>
@@ -59,12 +45,7 @@ export const TravelerEditcard = ({
         </Tooltip>
       </TravelerCard>
 
-      <TravelerForm
-        open={isOpen}
-        onClose={onClose}
-        onFinish={onEditFinished}
-        defaultValues={traveler}
-      />
+      <TravelerForm open={isOpen} onClose={onClose} onFinish={onEditFinished} defaultValues={traveler} />
     </>
   );
 };

@@ -1,19 +1,9 @@
-import { useForm } from "react-hook-form";
-import {
-  FormControl,
-  FormLabel,
-  VStack,
-  FormErrorMessage,
-  Input,
-  Box,
-  Flex,
-  Button,
-  Center,
-} from "@chakra-ui/react";
-import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from 'react-hook-form';
+import { FormControl, FormLabel, VStack, FormErrorMessage, Input, Box, Flex, Button, Center } from '@chakra-ui/react';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { IDateFormSchema, dateFormSchema } from "../../../../entities/dateForm";
+import { IDateFormSchema, dateFormSchema } from '../../../../entities/dateForm';
 
 export type StepDatesFormProps = {
   onFinish: (data: IDateFormSchema) => void;
@@ -21,11 +11,7 @@ export type StepDatesFormProps = {
   initialValues: Partial<IDateFormSchema>;
 };
 
-export function StepDatesForm({
-  onFinish,
-  disabled,
-  initialValues,
-}: StepDatesFormProps) {
+export function StepDatesForm({ onFinish, disabled, initialValues }: StepDatesFormProps) {
   const {
     register,
     handleSubmit,
@@ -42,24 +28,14 @@ export function StepDatesForm({
           <VStack spacing="4" maxW={400} w="full">
             <FormControl id="checkInDate" isInvalid={!!errors.checkInDate}>
               <FormLabel>Check in date</FormLabel>
-              <Input
-                type="date"
-                {...register("checkInDate", { disabled })}
-                tabIndex={disabled ? -1 : 0}
-              />
+              <Input type="date" {...register('checkInDate', { disabled })} tabIndex={disabled ? -1 : 0} />
               <FormErrorMessage>{errors.checkInDate?.message}</FormErrorMessage>
             </FormControl>
 
             <FormControl id="checkOutDate" isInvalid={!!errors.checkOutDate}>
               <FormLabel>Check out Date</FormLabel>
-              <Input
-                type="date"
-                {...register("checkOutDate", { disabled })}
-                tabIndex={disabled ? -1 : 0}
-              />
-              <FormErrorMessage>
-                {errors.checkOutDate?.message}
-              </FormErrorMessage>
+              <Input type="date" {...register('checkOutDate', { disabled })} tabIndex={disabled ? -1 : 0} />
+              <FormErrorMessage>{errors.checkOutDate?.message}</FormErrorMessage>
             </FormControl>
           </VStack>
         </Center>

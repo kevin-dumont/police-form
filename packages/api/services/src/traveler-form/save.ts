@@ -1,9 +1,8 @@
-import { v1 as uuid } from "uuid";
-import dayjs from "dayjs";
+import { v1 as uuid } from 'uuid';
+import dayjs from 'dayjs';
 
-import { getDataMapper } from "@sygmaa/core-dynamodb";
-import { TravelerFormObject, TravelerFormOutput } from "@sygmaa/entities";
-import { AppLogger } from "@sygmaa/logger";
+import { getDataMapper } from '@sygmaa/core-dynamodb';
+import { TravelerFormObject, TravelerFormOutput } from '@sygmaa/entities';
 
 export async function saveTravelerForm({ ...form }: TravelerFormOutput) {
   const date = dayjs().toISOString();

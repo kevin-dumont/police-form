@@ -1,7 +1,7 @@
-import { DynamoDbSchema, DynamoDbTable } from "@aws/dynamodb-data-mapper";
-import { TravelerFormObjectInput } from "./types";
-import { AppLogger } from "@sygmaa/logger";
-import { addTableEnvPrefix } from "@sygmaa/services";
+import { DynamoDbSchema, DynamoDbTable } from '@aws/dynamodb-data-mapper';
+import { TravelerFormObjectInput } from './types';
+import { AppLogger } from '@sygmaa/logger';
+import { addTableEnvPrefix } from '@sygmaa/services';
 
 export class TravelerFormObject {
   constructor(obj: TravelerFormObjectInput) {
@@ -9,8 +9,8 @@ export class TravelerFormObject {
   }
 
   get [DynamoDbTable]() {
-    AppLogger.debug("table name", addTableEnvPrefix("traveler-form"));
-    return addTableEnvPrefix("traveler-form");
+    AppLogger.debug('table name', addTableEnvPrefix('traveler-form'));
+    return addTableEnvPrefix('traveler-form');
   }
 
   toJson() {
@@ -19,28 +19,28 @@ export class TravelerFormObject {
 
   get [DynamoDbSchema]() {
     return {
-      id: { type: "String", keyType: "HASH" },
-      checkInDate: { type: "String" },
-      checkOutDate: { type: "String" },
+      id: { type: 'String', keyType: 'HASH' },
+      checkInDate: { type: 'String' },
+      checkOutDate: { type: 'String' },
       travelers: {
-        type: "List",
+        type: 'List',
         memberType: {
-          type: "Document",
+          type: 'Document',
           members: {
-            firstName: { type: "String" },
-            lastName: { type: "String" },
-            address: { type: "String" },
-            phone: { type: "String" },
-            email: { type: "String" },
-            dateOfBirth: { type: "String" },
-            placeOfBirth: { type: "String" },
-            nationality: { type: "String" },
-            signature: { type: "String" },
+            firstName: { type: 'String' },
+            lastName: { type: 'String' },
+            address: { type: 'String' },
+            phone: { type: 'String' },
+            email: { type: 'String' },
+            dateOfBirth: { type: 'String' },
+            placeOfBirth: { type: 'String' },
+            nationality: { type: 'String' },
+            signature: { type: 'String' },
           },
         },
       },
-      createdTime: { type: "String" },
-      updatedTime: { type: "String" },
+      createdTime: { type: 'String' },
+      updatedTime: { type: 'String' },
     };
   }
 }

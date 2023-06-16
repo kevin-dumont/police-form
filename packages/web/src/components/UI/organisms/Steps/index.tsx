@@ -9,8 +9,8 @@ import {
   StepTitle,
   Stepper,
   useSteps,
-} from "@chakra-ui/react";
-import { useSize } from "@chakra-ui/react-use-size";
+} from '@chakra-ui/react';
+import { useSize } from '@chakra-ui/react-use-size';
 import React, {
   PropsWithChildren,
   ReactElement,
@@ -21,7 +21,7 @@ import React, {
   useContext,
   useEffect,
   useRef,
-} from "react";
+} from 'react';
 
 export type Step = {
   title: string;
@@ -30,10 +30,7 @@ export type Step = {
 
 export type StepsProps = {
   children: ReactElement<StepsItemProps>[];
-} & Pick<
-  ReturnType<typeof useSteps>,
-  "activeStep" | "setActiveStep" | "isCompleteStep"
->;
+} & Pick<ReturnType<typeof useSteps>, 'activeStep' | 'setActiveStep' | 'isCompleteStep'>;
 
 type StepContextType = {
   activeStep: number;
@@ -47,33 +44,23 @@ const StepContext = createContext<StepContextType>({
   activeStepRef: null,
 });
 
-export const Steps = ({
-  activeStep,
-  isCompleteStep,
-  setActiveStep,
-  children,
-}: StepsProps) => {
+export const Steps = ({ activeStep, isCompleteStep, setActiveStep, children }: StepsProps) => {
   const currentStepRef = useRef<HTMLDivElement>(null);
 
   const currentStepSizes = useSize(currentStepRef);
 
   const getStepIndex = useCallback(
-    (title: string) =>
-      React.Children.toArray(children).findIndex(
-        (step: any) => step.props.title === title
-      ),
-    [children]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (title: string) => React.Children.toArray(children).findIndex((step: any) => step.props.title === title),
+    [children],
   );
 
-  const isActiveStep = useCallback(
-    (title: string) => getStepIndex(title) === activeStep,
-    [activeStep, getStepIndex]
-  );
+  const isActiveStep = useCallback((title: string) => getStepIndex(title) === activeStep, [activeStep, getStepIndex]);
 
   useEffect(() => {
     const initialOverflow = document.body.style.overflowX;
 
-    document.body.style.overflowX = "hidden";
+    document.body.style.overflowX = 'hidden';
 
     return () => {
       document.body.style.overflowX = initialOverflow;
@@ -81,9 +68,7 @@ export const Steps = ({
   }, []);
 
   return (
-    <StepContext.Provider
-      value={{ activeStep, isActiveStep, activeStepRef: currentStepRef }}
-    >
+    <StepContext.Provider value={{ activeStep, isActiveStep, activeStepRef: currentStepRef }}>
       <Stepper size="md" index={activeStep}>
         {React.Children.map(children, (step, index) => (
           <Step
@@ -95,11 +80,7 @@ export const Steps = ({
             }}
           >
             <StepIndicator>
-              <StepStatus
-                complete={<StepIcon />}
-                incomplete={<StepNumber />}
-                active={<StepNumber />}
-              />
+              <StepStatus complete={<StepIcon />} incomplete={<StepNumber />} active={<StepNumber />} />
             </StepIndicator>
 
             <StepTitle>{step.props.title}</StepTitle>
@@ -109,13 +90,7 @@ export const Steps = ({
         ))}
       </Stepper>
 
-      <Box
-        position="relative"
-        mt={16}
-        marginLeft={-10}
-        marginRight={-10}
-        height={currentStepSizes?.height}
-      >
+      <Box position="relative" mt={16} marginLeft={-10} marginRight={-10} height={currentStepSizes?.height}>
         <Box
           transform={`translateX(-${activeStep * 100}%)`}
           transition="transform 0.5s ease"
@@ -136,6 +111,7 @@ export type StepsItemProps = PropsWithChildren<{
   title: string;
 }>;
 
+// eslint-disable-next-line react/display-name
 Steps.Item = ({ title, children }: StepsItemProps) => {
   const { isActiveStep, activeStepRef } = useContext(StepContext);
 
@@ -143,7 +119,7 @@ Steps.Item = ({ title, children }: StepsItemProps) => {
     <Box minW="full" paddingLeft={10} paddingRight={10} position="relative">
       <Box
         position="absolute"
-        display={isActiveStep(title) ? "none" : "block"}
+        display={isActiveStep(title) ? 'none' : 'block'}
         zIndex={1}
         top={0}
         left={0}
@@ -153,7 +129,7 @@ Steps.Item = ({ title, children }: StepsItemProps) => {
 
       <Box
         minW="full"
-        opacity={isActiveStep(title) ? "1" : "0"}
+        opacity={isActiveStep(title) ? '1' : '0'}
         transition="opacity 0.5s ease"
         ref={isActiveStep(title) ? activeStepRef : undefined}
       >

@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   Button,
   FormControl,
@@ -16,11 +16,11 @@ import {
   FormErrorMessage,
   Box,
   Textarea,
-} from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { CountrySelect } from "../../atoms/CountrySelect";
-import { ITravelerShema, travelerSchema } from "../../../../entities/traveler";
+import { CountrySelect } from '../../atoms/CountrySelect';
+import { ITravelerShema, travelerSchema } from '../../../../entities/traveler';
 
 type TravelerFormProps = {
   onFinish: (data: ITravelerShema) => void;
@@ -29,12 +29,7 @@ type TravelerFormProps = {
   onClose: () => void;
 };
 
-export function TravelerForm({
-  onFinish,
-  defaultValues,
-  open,
-  onClose,
-}: TravelerFormProps) {
+export function TravelerForm({ onFinish, defaultValues, open, onClose }: TravelerFormProps) {
   const {
     register,
     handleSubmit,
@@ -58,17 +53,10 @@ export function TravelerForm({
   };
 
   return (
-    <Modal
-      isOpen={open}
-      onClose={onClose}
-      size="full"
-      motionPreset="slideInBottom"
-    >
+    <Modal isOpen={open} onClose={onClose} size="full" motionPreset="slideInBottom">
       <ModalOverlay />
-      <ModalContent display="flex" alignItems="center" animation={"unset"}>
-        <ModalHeader maxW={400}>
-          {defaultValues ? "Edit traveler" : "Add traveler"}
-        </ModalHeader>
+      <ModalContent display="flex" alignItems="center" animation={'unset'}>
+        <ModalHeader maxW={400}>{defaultValues ? 'Edit traveler' : 'Add traveler'}</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6} maxW={400}>
           <Box>
@@ -76,65 +64,49 @@ export function TravelerForm({
               <VStack spacing="4">
                 <FormControl id="firstName" isInvalid={!!errors.firstName}>
                   <FormLabel>First Name</FormLabel>
-                  <Input type="text" {...register("firstName")} size="md" />
-                  <FormErrorMessage>
-                    {errors.firstName?.message}
-                  </FormErrorMessage>
+                  <Input type="text" {...register('firstName')} size="md" />
+                  <FormErrorMessage>{errors.firstName?.message}</FormErrorMessage>
                 </FormControl>
 
                 <FormControl id="lastName" isInvalid={!!errors.lastName}>
                   <FormLabel>Last Name</FormLabel>
-                  <Input type="text" {...register("lastName")} />
-                  <FormErrorMessage>
-                    {errors.lastName?.message}
-                  </FormErrorMessage>
+                  <Input type="text" {...register('lastName')} />
+                  <FormErrorMessage>{errors.lastName?.message}</FormErrorMessage>
                 </FormControl>
 
                 <FormControl id="nationality" isInvalid={!!errors.nationality}>
                   <FormLabel>Nationality</FormLabel>
-                  <CountrySelect {...register("nationality")} />
+                  <CountrySelect {...register('nationality')} />
                   <FormErrorMessage>Nationality is required</FormErrorMessage>
                 </FormControl>
 
                 <FormControl id="dateOfBirth" isInvalid={!!errors.dateOfBirth}>
                   <FormLabel>Date of Birth</FormLabel>
-                  <Input type="date" {...register("dateOfBirth")} />
-                  <FormErrorMessage>
-                    {errors.dateOfBirth?.message}
-                  </FormErrorMessage>
+                  <Input type="date" {...register('dateOfBirth')} />
+                  <FormErrorMessage>{errors.dateOfBirth?.message}</FormErrorMessage>
                 </FormControl>
 
-                <FormControl
-                  id="placeOfBirth"
-                  isInvalid={!!errors.placeOfBirth}
-                >
+                <FormControl id="placeOfBirth" isInvalid={!!errors.placeOfBirth}>
                   <FormLabel>Place of Birth</FormLabel>
-                  <Input type="text" {...register("placeOfBirth")} />
-                  <FormErrorMessage>
-                    {errors.placeOfBirth?.message}
-                  </FormErrorMessage>
+                  <Input type="text" {...register('placeOfBirth')} />
+                  <FormErrorMessage>{errors.placeOfBirth?.message}</FormErrorMessage>
                 </FormControl>
 
-                <FormControl
-                  id="fullHomeAddress"
-                  isInvalid={!!errors.fullHomeAddress}
-                >
+                <FormControl id="fullHomeAddress" isInvalid={!!errors.fullHomeAddress}>
                   <FormLabel>Full Home Address</FormLabel>
-                  <Textarea {...register("fullHomeAddress")} />
-                  <FormErrorMessage>
-                    {errors.fullHomeAddress?.message}
-                  </FormErrorMessage>
+                  <Textarea {...register('fullHomeAddress')} />
+                  <FormErrorMessage>{errors.fullHomeAddress?.message}</FormErrorMessage>
                 </FormControl>
 
                 <FormControl id="phone" isInvalid={!!errors.phone}>
                   <FormLabel>Phone</FormLabel>
-                  <Input type="tel" {...register("phone")} />
+                  <Input type="tel" {...register('phone')} />
                   <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
                 </FormControl>
 
                 <FormControl id="email" isInvalid={!!errors.email}>
                   <FormLabel>Email</FormLabel>
-                  <Input type="email" {...register("email")} />
+                  <Input type="email" {...register('email')} />
                   <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
                 </FormControl>
               </VStack>

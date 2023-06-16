@@ -1,24 +1,13 @@
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { ArrowBackIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  Grid,
-  GridItem,
-  Text,
-} from "@chakra-ui/react";
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { ArrowBackIcon } from '@chakra-ui/icons';
+import { Button, Flex, FormControl, FormErrorMessage, Grid, GridItem, Text } from '@chakra-ui/react';
 
-import { TravelerSignCard } from "../../molecules/TravelerSignCard";
-import { useEffect } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ISignaturesFormShema,
-  signaturesFormSchema,
-} from "../../../../entities/signatureForm";
-import { ITravelerShema } from "../../../../entities/traveler";
-import { DeepPartial } from "../../../../types/utilities";
+import { TravelerSignCard } from '../../molecules/TravelerSignCard';
+import { useEffect } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ISignaturesFormShema, signaturesFormSchema } from '../../../../entities/signatureForm';
+import { ITravelerShema } from '../../../../entities/traveler';
+import { DeepPartial } from '../../../../types/utilities';
 
 export type StepSignProps = {
   onPreviousClick: () => void;
@@ -28,13 +17,7 @@ export type StepSignProps = {
   travelers: ITravelerShema[];
 };
 
-export const StepSign = ({
-  onFinish,
-  initialValues,
-  onPreviousClick,
-  disabled,
-  travelers,
-}: StepSignProps) => {
+export const StepSign = ({ onFinish, initialValues, onPreviousClick, disabled, travelers }: StepSignProps) => {
   const {
     handleSubmit,
     control,
@@ -45,7 +28,7 @@ export const StepSign = ({
     resolver: zodResolver(signaturesFormSchema),
   });
 
-  const { fields } = useFieldArray({ control, name: "signatures" });
+  const { fields } = useFieldArray({ control, name: 'signatures' });
 
   const onSubmit = (data: ISignaturesFormShema) => {
     onFinish?.(data);
@@ -64,9 +47,9 @@ export const StepSign = ({
       <Grid
         gap={6}
         templateColumns={{
-          base: "1fr",
-          md: "repeat(2, 1fr)",
-          lg: "repeat(3, 1fr)",
+          base: '1fr',
+          md: 'repeat(2, 1fr)',
+          lg: 'repeat(3, 1fr)',
         }}
       >
         {fields?.map((item, index) => (
@@ -75,21 +58,15 @@ export const StepSign = ({
               render={({ field }) => (
                 <FormControl
                   id={`signatures.${index}`}
-                  isInvalid={
-                    !!errors.signatures?.[item.index]?.signature?.message
-                  }
+                  isInvalid={!!errors.signatures?.[item.index]?.signature?.message}
                 >
                   <TravelerSignCard
                     traveler={travelers[field.value.index]}
                     index={field.value.index}
                     value={field.value.signature}
-                    onChange={(signature) =>
-                      field.onChange({ index, signature })
-                    }
+                    onChange={(signature) => field.onChange({ index, signature })}
                   />
-                  <FormErrorMessage>
-                    {errors.signatures?.[item.index]?.signature?.message}
-                  </FormErrorMessage>
+                  <FormErrorMessage>{errors.signatures?.[item.index]?.signature?.message}</FormErrorMessage>
                 </FormControl>
               )}
               name={`signatures.${index}`}
@@ -111,12 +88,7 @@ export const StepSign = ({
           Previous step
         </Button>
 
-        <Button
-          mt={10}
-          type="submit"
-          disabled={disabled}
-          tabIndex={disabled ? -1 : 0}
-        >
+        <Button mt={10} type="submit" disabled={disabled} tabIndex={disabled ? -1 : 0}>
           Finish registration
         </Button>
       </Flex>

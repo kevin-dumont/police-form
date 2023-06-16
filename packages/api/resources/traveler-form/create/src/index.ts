@@ -1,11 +1,11 @@
-import { Handler } from "aws-lambda";
-import { AppLogger } from "@sygmaa/logger";
-import { TravelerFormInput, validateTravelerForm } from "@sygmaa/entities";
+import { Handler } from 'aws-lambda';
+import { AppLogger } from '@sygmaa/logger';
+import { TravelerFormInput, validateTravelerForm } from '@sygmaa/entities';
 
-import { saveTravelerForm } from "@sygmaa/services";
+import { saveTravelerForm } from '@sygmaa/services';
 
 export const handler: Handler<{ body: TravelerFormInput }> = async (event) => {
-  AppLogger.info("Starting traveler-form-create", event);
+  AppLogger.info('Starting traveler-form-create', event);
 
   const result = validateTravelerForm(event.body);
 
@@ -22,7 +22,7 @@ export const handler: Handler<{ body: TravelerFormInput }> = async (event) => {
     return {
       statusCode: 201,
       body: {
-        message: "Form saved successfully",
+        message: 'Form saved successfully',
         data: res,
       },
     };
@@ -31,7 +31,7 @@ export const handler: Handler<{ body: TravelerFormInput }> = async (event) => {
 
     return {
       statusCode: 500,
-      body: { error: "An error occurred while saving the form" },
+      body: { error: 'An error occurred while saving the form' },
     };
   }
 };

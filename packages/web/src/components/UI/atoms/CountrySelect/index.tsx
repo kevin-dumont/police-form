@@ -1,19 +1,14 @@
-import { Select, SelectProps } from "@chakra-ui/react";
-import { countries } from "countries-list";
-import { forwardRef, useMemo } from "react";
+import { Select, SelectProps } from '@chakra-ui/react';
+import { countries } from 'countries-list';
+import { forwardRef, useMemo } from 'react';
 
-export const CountrySelect = forwardRef<
-  React.LegacyRef<HTMLSelectElement>,
-  SelectProps
->((props, ref) => {
+export const CountrySelect = forwardRef<React.LegacyRef<HTMLSelectElement>, SelectProps>((props, ref) => {
   const countriesOptions = useMemo(() => {
-    const sortedCountries = Object.entries(countries).sort((a, b) =>
-      a[1].name > b[1].name ? 1 : -1
-    );
+    const sortedCountries = Object.entries(countries).sort((a, b) => (a[1].name > b[1].name ? 1 : -1));
 
     return sortedCountries.map(([countryCode, { native, emoji, name }]) => ({
       value: countryCode,
-      label: `${emoji} ${name}${name !== native ? ` (${native})` : ""}`,
+      label: `${emoji} ${name}${name !== native ? ` (${native})` : ''}`,
     }));
   }, []);
 
@@ -27,3 +22,5 @@ export const CountrySelect = forwardRef<
     </Select>
   );
 });
+
+CountrySelect.displayName = 'CountrySelect';

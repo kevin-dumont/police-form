@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-const { build } = require("esbuild");
-const config = require("./config");
+const { build } = require('esbuild');
+const config = require('./config');
 
 /**
  * Executes a shell command and return it as a Promise.
@@ -19,9 +19,9 @@ function execShellCommand(cmd) {
 }
 
 (async () => {
-  console.time("🚀 built in");
+  console.time('🚀 built in');
 
   await build(config);
 
-  console.timeEnd("🚀 built in");
+  console.timeEnd('🚀 built in');
 })();

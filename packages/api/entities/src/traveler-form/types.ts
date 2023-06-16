@@ -1,4 +1,4 @@
-import { TravelerFormOutput } from "./schema";
+import { TravelerFormOutput } from './schema';
 
 export type NonEditableFields = {
   id: string;

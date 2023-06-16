@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { ITravelerShema, travelerSchema } from "./traveler";
-import { calculateAge } from "../services/numbers/calculateAge";
+import { z } from 'zod';
+import { ITravelerShema, travelerSchema } from './traveler';
+import { calculateAge } from '../services/numbers/calculateAge';
 
 // Validation function
 const hasAtLeastOneAdult = (travelers: ITravelerShema[]) => {
@@ -9,7 +9,7 @@ const hasAtLeastOneAdult = (travelers: ITravelerShema[]) => {
 
 export const travelerFormSchema = z.object({
   travelers: z.array(travelerSchema).refine(hasAtLeastOneAdult, {
-    message: "At least one adult must be present",
+    message: 'At least one adult must be present',
   }),
 });
 
