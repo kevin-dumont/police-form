@@ -1,5 +1,7 @@
 import { DynamoDbSchema, DynamoDbTable } from "@aws/dynamodb-data-mapper";
 import { TravelerFormObjectInput } from "./types";
+import { AppLogger } from "@sygmaa/logger";
+import { addTableEnvPrefix } from "@sygmaa/services";
 
 export class TravelerFormObject {
   constructor(obj: TravelerFormObjectInput) {
@@ -7,7 +9,8 @@ export class TravelerFormObject {
   }
 
   get [DynamoDbTable]() {
-    return "traveler-form";
+    AppLogger.debug("table name", addTableEnvPrefix("traveler-form"));
+    return addTableEnvPrefix("traveler-form");
   }
 
   toJson() {
