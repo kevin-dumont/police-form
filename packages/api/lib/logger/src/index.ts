@@ -1,4 +1,4 @@
-export type LogType = "error" | "warning" | "info" | "log" | "debug";
+export type LogType = "error" | "warn" | "info" | "log" | "debug";
 
 /**
  * An abstraction of console.[type] in case of a future
@@ -12,7 +12,7 @@ const Logger =
 
 export const AppLogger = {
   error: Logger("error"),
-  warning: Logger("warning"),
+  warn: Logger("warn"),
   info: Logger("info"),
   log: Logger("log"),
   debug: Logger("debug"),
