@@ -1,8 +1,8 @@
 import { apiKey, apiUri } from "../../../config/env";
 import { TravelerFormInput } from "@sygmaa/entities";
 
-export const createTravelerForm = (travelerForm: TravelerFormInput) => {
-  return fetch(`${apiUri}/traveler-form`, {
+export const createTravelerForm = async (travelerForm: TravelerFormInput) => {
+  const response = await fetch(`${apiUri}/traveler-form`, {
     body: JSON.stringify(travelerForm),
     method: "POST",
     headers: {
@@ -11,4 +11,12 @@ export const createTravelerForm = (travelerForm: TravelerFormInput) => {
     },
     redirect: "follow",
   });
+
+  const json = await response.json();
+
+  if (response.ok) {
+    return json;
+  }
+
+  throw new Error(json);
 };

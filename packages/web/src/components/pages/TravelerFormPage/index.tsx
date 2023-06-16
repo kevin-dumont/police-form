@@ -9,8 +9,9 @@ import {
   useBoolean,
   useSteps,
 } from "@chakra-ui/react";
-import { CheckCircleIcon, WarningIcon } from "@chakra-ui/icons";
+import { CheckCircleIcon } from "@chakra-ui/icons";
 import { useMemo, useState } from "react";
+import { useToast } from "@chakra-ui/react";
 
 import {
   StepDatesForm,
@@ -41,9 +42,9 @@ export type IFormInput = Partial<IFormSchema>;
 
 export function TravelerFormPage() {
   const [hasBegin, setHasBegin] = useBoolean();
-  const [hasFinished, setHasFinished] = useBoolean();
-  const [hasError, setHasError] = useBoolean();
+  const [isSuccess, setIsSuccess] = useBoolean();
   const [isSending, setIsSending] = useBoolean();
+  const toast = useToast();
 
   const { activeStep, setActiveStep, isCompleteStep, goToNext, goToPrevious } =
     useSteps({
@@ -77,8 +78,16 @@ export function TravelerFormPage() {
     setIsSending.on();
 
     createTravelerForm(buildTravelerFormOutput(formInput))
-      .then(setHasFinished.on)
-      .catch(setHasError.on)
+      .then(setIsSuccess.on)
+      .catch(() =>
+        toast({
+          title: "Error",
+          description: "An error occured, please retry later",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        })
+      )
       .finally(setIsSending.off);
   };
 
@@ -110,20 +119,7 @@ export function TravelerFormPage() {
     [formState.travelers]
   );
 
-  if (hasFinished) {
-    if (hasError) {
-      return (
-        <Center h="100vh">
-          <HStack>
-            <WarningIcon color="red.500" fontSize="2xl" />
-            <Text fontWeight="semibold" fontSize="2xl">
-              An error occured, please retry later
-            </Text>
-          </HStack>
-        </Center>
-      );
-    }
-
+  if (isSuccess) {
     return (
       <Center h="100vh">
         <HStack>
@@ -171,7 +167,7 @@ export function TravelerFormPage() {
         )}
       </Box>
 
-      {hasBegin && !hasFinished && (
+      {hasBegin && !isSuccess && (
         <Steps
           activeStep={activeStep}
           isCompleteStep={isCompleteStep}
